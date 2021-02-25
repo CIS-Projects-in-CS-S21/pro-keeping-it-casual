@@ -1,0 +1,7 @@
+message AddUserRequest {
+
+}
+
+message AddUserResponse {
+
+}

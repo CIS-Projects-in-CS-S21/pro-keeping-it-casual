@@ -1,0 +1,44 @@
+version: v1beta1
+plugins:
+
+  # golang
+  - name: go
+    out: gen/go
+  - name: go-grpc
+    out: gen/go
+
+  # python
+  - name: python_betterproto
+    out: gen/python
+
+  # docs
+  - name: doc
+    out: docs
+    opt: markdown,API.md
+  - name: doc
+    out: gen/docs
+    opt: html,API.html
+
+  # grpc-web
+  - name: js
+    out: gen/grpc-web
+    opt: import_style=commonjs
+
+  - name: grpc-web
+    out: gen/grpc-web
+    opt: import_style=typescript,mode=grpcwebtext
+
+  # nodejs/typescript
+  # https://slavovojacek.medium.com/grpc-on-node-js-with-buf-and-typescript-part-1-5aad61bab03b
+  - name: js
+    out: gen/nodejs
+    opt: import_style=commonjs,binary
+
+  - name: js-grpc
+    out: gen/nodejs
+    opt: grpc_js
+    path: grpc_tools_node_protoc_plugin
+
+  - name: ts
+    out: gen/nodejs
+    opt: grpc_js
