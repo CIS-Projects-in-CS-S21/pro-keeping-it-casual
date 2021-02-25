@@ -5,17 +5,13 @@ package kic.common;
 option go_package = "./proto;proto";
 
 
-message AddFile {
-  string name = 1;
-  string uri = 2;
-  string mimeType = 3;
-  map<string, string> tags = 4;
+message User {
+  int64 userID = 1;
+  string userName = 2;
 }
 
 message File {
-  string id = 1;
-  string name = 2;
-  string uri = 3;
-  string mimeType = 4;
-  map<string, string> tags = 5;
+  string fileName = 1;
+  string fileLocation = 2;
+  map<string, string>
 }

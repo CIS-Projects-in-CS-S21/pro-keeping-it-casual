@@ -1,3 +1,10 @@
+syntax = "proto3";
+
+package kic.authentication;
+
+option go_package = "./proto;proto";
+
+
 message AddUserRequest {
 
 }

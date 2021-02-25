@@ -1,1 +1,5 @@
-package proto
+syntax = "proto3";
+
+package kic.feed;
+
+option go_package = "./proto;proto";
