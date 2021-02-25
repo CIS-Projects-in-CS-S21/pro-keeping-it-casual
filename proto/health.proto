@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+package kic.health;
+
+option go_package = "./proto;proto";

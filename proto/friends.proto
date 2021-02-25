@@ -1,5 +1,5 @@
 syntax = "proto3";
 
-package kic.common;
+package kic.friends;
 
 option go_package = "./proto;proto";

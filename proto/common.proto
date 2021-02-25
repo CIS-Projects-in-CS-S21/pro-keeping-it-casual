@@ -13,5 +13,5 @@ message User {
 message File {
   string fileName = 1;
   string fileLocation = 2;
-  map<string, string>
+  map<string, string> metadata = 3;
 }
