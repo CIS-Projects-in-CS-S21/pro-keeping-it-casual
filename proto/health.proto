@@ -3,3 +3,60 @@ syntax = "proto3";
 package kic.health;
 
 option go_package = "./proto/health;proto";
+
+import "proto/common.proto";
+import "google/protobuf/timestamp.proto";
+
+
+enum HealthDataError {
+  USER_NOT_FOUND = 0;
+  DATE_NOT_FOUND = 1;
+}
+
+message HealthDataErrorResponse {
+  HealthDataError error = 1;
+}
+
+message GetHealthDataForUserRequest {
+  int64 userID = 1;
+}
+
+message MentalHealthLog {
+  kic.common.Date logDate = 1;
+  uint32 score = 2;
+}
+
+message GetHealthDataForUserResponse {
+  HealthDataError error = 1;
+  repeated MentalHealthLog healthData = 2;
+}
+
+message AddHealthDataForUserRequest {
+  int64 userID = 1;
+  MentalHealthLog newEntry = 2;
+}
+
+message DeleteHealthDataForUserRequest {
+  int64 userID = 1;
+  oneof data {
+    bool all = 2;
+    kic.common.Date dateToRemove = 3;
+  }
+}
+
+message DeleteHealthDataForUserResponse {
+  HealthDataError error = 1;
+  uint32 entriesDeleted = 2;
+}
+
+message UpdateHealthDataForDateRequest {
+  int64 userID = 1;
+  MentalHealthLog desiredLogInfo = 2;
+}
+
+service HealthTracking {
+  rpc GetHealthDataForUser(GetHealthDataForUserRequest) returns (GetHealthDataForUserResponse);
+  rpc AddHealthDataForUser(AddHealthDataForUserRequest) returns (HealthDataErrorResponse);
+  rpc DeleteHealthDataForUser(DeleteHealthDataForUserRequest) returns (DeleteHealthDataForUserResponse);
+  rpc UpdateHealthDataForDate(UpdateHealthDataForDateRequest) returns (HealthDataErrorResponse);
+}

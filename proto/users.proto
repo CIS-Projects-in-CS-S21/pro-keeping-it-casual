@@ -39,7 +39,7 @@ message AddUserRequest {
   string desiredUsername = 2;
   string desiredPassword = 3;
   // User's birthday in MM/DD/YYYY format.
-  string birthday = 4;
+  kic.common.Date birthday = 4;
   // User's city location.
   string city = 5;
 }
