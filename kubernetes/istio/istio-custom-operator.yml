@@ -1,0 +1,48 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  meshConfig:
+  # We assume that our auth service is named "auth" and is in the kic namespace
+  # of course the auth service must implement the Envoy gRPC service
+    extensionProviders:
+    - name: "ext-authz-grpc"
+      envoyExtAuthzGrpc:
+        service: "auth.kic.svc.cluster.local"
+        port: "9000"
+  # This is http leaving it in for now but we are using grpc so I doubt it will be of use
+  # this reference is from the istio documentation
+  #- name: "sample-ext-authz-http"
+  #  envoyExtAuthzHttp:
+  #    service: "ext-authz.foo.svc.cluster.local"
+  #    port: "8000"
+  #    includeHeadersInCheck: ["x-ext-authz"]
+  components:
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: true
+        k8s:
+          service:
+            # keeping all the default ports to not overwrite them by accident
+            ports:
+              - port: 15021
+                targetPort: 15021
+                name: status-port
+              - port: 80
+                targetPort: 8080
+                name: http2
+              - port: 443
+                targetPort: 8443
+                name: https
+              - port: 15012
+                targetPort: 15012
+                name: tcp-istiod
+              - port: 15443
+                targetPort: 15443
+                name: tls
+              ####### BEGIN CUSTOM GRPC PORT CONFIG #######
+              - name: grpc
+                port: 50051
+                protocol: TCP
+                targetPort: 50051
+              ####### END CUSTOM GRPC PORT CONFIG #######
+
