@@ -3,3 +3,52 @@ syntax = "proto3";
 package kic.friends;
 
 option go_package = "./proto/friends;proto";
+
+import "proto/common.proto";
+
+message GetFriendsForUserRequest {
+  kic.common.User user = 1;
+}
+
+message GetFriendsForUserResponse {
+  repeated uint64 friends = 1;
+}
+
+message GetRecommendationsForUserRequest {
+  kic.common.User user = 1;
+}
+
+message GetRecommendationsForUserResponse {
+  repeated kic.common.User recommendations = 1;
+}
+
+enum ConnectionErrors {
+  NO_FRIENDSHIP = 0;
+  USER_ONE_DNE = 1;
+  USER_TWO_DNE = 2;
+}
+
+message UpdateConnectionBetweenUsersRequest {
+  uint64 firstUserID = 1;
+  uint64 secondUserID = 2;
+  float updateValue = 3;
+}
+
+message GetConnectionBetweenUsersRequest {
+  uint64 firstUserID = 1;
+  uint64 secondUserID = 2;
+}
+
+message ConnectionBetweenUsersResponse {
+  ConnectionErrors error = 1;
+  float connectionStrength = 2;
+}
+
+service Friends {
+  rpc GetFriendsForUser(GetFriendsForUserRequest) returns (GetFriendsForUserResponse);
+
+  rpc GetRecommendationsForUser(GetRecommendationsForUserRequest) returns (GetRecommendationsForUserResponse);
+
+  rpc UpdateConnectionBetweenUsers(UpdateConnectionBetweenUsersRequest) returns (ConnectionBetweenUsersResponse);
+  rpc GetConnectionBetweenUsers(GetConnectionBetweenUsersRequest) returns (ConnectionBetweenUsersResponse);
+}

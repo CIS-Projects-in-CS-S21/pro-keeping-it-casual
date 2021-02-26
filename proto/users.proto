@@ -72,6 +72,14 @@ message GetUserByIDResponse {
 
 }
 
+message GetUserNameByIDRequest {
+
+}
+
+message GetUserNameByIDResponse {
+
+}
+
 /*
 Service handling fetching and storing data about users.
 */
@@ -80,4 +88,5 @@ service UserService {
 
   rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserByUsernameResponse);
   rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
+  rpc GetUserNameByID(GetUserNameByIDRequest) returns (GetUserNameByIDResponse);
 }

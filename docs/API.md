@@ -10,8 +10,15 @@
   
 - [proto/feed.proto](#proto/feed.proto)
 - [proto/friends.proto](#proto/friends.proto)
+    - [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse)
+    - [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest)
     - [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest)
     - [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse)
+    - [GetRecommendationsForUserRequest](#kic.friends.GetRecommendationsForUserRequest)
+    - [GetRecommendationsForUserResponse](#kic.friends.GetRecommendationsForUserResponse)
+    - [UpdateConnectionBetweenUsersRequest](#kic.friends.UpdateConnectionBetweenUsersRequest)
+  
+    - [ConnectionErrors](#kic.friends.ConnectionErrors)
   
     - [Friends](#kic.friends.Friends)
   
@@ -39,6 +46,8 @@
     - [GetUserByIDResponse](#kic.users.GetUserByIDResponse)
     - [GetUserByUsernameRequest](#kic.users.GetUserByUsernameRequest)
     - [GetUserByUsernameResponse](#kic.users.GetUserByUsernameResponse)
+    - [GetUserNameByIDRequest](#kic.users.GetUserNameByIDRequest)
+    - [GetUserNameByIDResponse](#kic.users.GetUserNameByIDResponse)
   
     - [AddUserError](#kic.users.AddUserError)
   
@@ -137,10 +146,47 @@
 
 
 
+<a name="kic.friends.ConnectionBetweenUsersResponse"></a>
+
+### ConnectionBetweenUsersResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| error | [ConnectionErrors](#kic.friends.ConnectionErrors) |  |  |
+| connectionStrength | [float](#float) |  |  |
+
+
+
+
+
+
+<a name="kic.friends.GetConnectionBetweenUsersRequest"></a>
+
+### GetConnectionBetweenUsersRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| firstUserID | [uint64](#uint64) |  |  |
+| secondUserID | [uint64](#uint64) |  |  |
+
+
+
+
+
+
 <a name="kic.friends.GetFriendsForUserRequest"></a>
 
 ### GetFriendsForUserRequest
 
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| user | [kic.common.User](#kic.common.User) |  |  |
 
 
 
@@ -153,10 +199,75 @@
 
 
 
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| friends | [uint64](#uint64) | repeated |  |
+
+
+
+
+
+
+<a name="kic.friends.GetRecommendationsForUserRequest"></a>
+
+### GetRecommendationsForUserRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| user | [kic.common.User](#kic.common.User) |  |  |
+
+
+
+
+
+
+<a name="kic.friends.GetRecommendationsForUserResponse"></a>
+
+### GetRecommendationsForUserResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| recommendations | [kic.common.User](#kic.common.User) | repeated |  |
+
+
+
+
+
+
+<a name="kic.friends.UpdateConnectionBetweenUsersRequest"></a>
+
+### UpdateConnectionBetweenUsersRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| firstUserID | [uint64](#uint64) |  |  |
+| secondUserID | [uint64](#uint64) |  |  |
+| updateValue | [float](#float) |  |  |
+
+
 
 
 
  
+
+
+<a name="kic.friends.ConnectionErrors"></a>
+
+### ConnectionErrors
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| NO_FRIENDSHIP | 0 |  |
+| USER_ONE_DNE | 1 |  |
+| USER_TWO_DNE | 2 |  |
+
 
  
 
@@ -171,6 +282,9 @@
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | GetFriendsForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse) |  |
+| GetRecommendationsForUser | [GetRecommendationsForUserRequest](#kic.friends.GetRecommendationsForUserRequest) | [GetRecommendationsForUserResponse](#kic.friends.GetRecommendationsForUserResponse) |  |
+| UpdateConnectionBetweenUsers | [UpdateConnectionBetweenUsersRequest](#kic.friends.UpdateConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) |  |
+| GetConnectionBetweenUsers | [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) |  |
 
  
 
@@ -480,6 +594,26 @@ Response to a request for adding a user to the database.
 
 
 
+
+<a name="kic.users.GetUserNameByIDRequest"></a>
+
+### GetUserNameByIDRequest
+
+
+
+
+
+
+
+<a name="kic.users.GetUserNameByIDResponse"></a>
+
+### GetUserNameByIDResponse
+
+
+
+
+
+
  
 
 
@@ -512,6 +646,7 @@ Service handling fetching and storing data about users.
 | AddUser | [AddUserRequest](#kic.users.AddUserRequest) | [AddUserResponse](#kic.users.AddUserResponse) |  |
 | GetUserByUsername | [GetUserByUsernameRequest](#kic.users.GetUserByUsernameRequest) | [GetUserByUsernameResponse](#kic.users.GetUserByUsernameResponse) |  |
 | GetUserByID | [GetUserByIDRequest](#kic.users.GetUserByIDRequest) | [GetUserByIDResponse](#kic.users.GetUserByIDResponse) |  |
+| GetUserNameByID | [GetUserNameByIDRequest](#kic.users.GetUserNameByIDRequest) | [GetUserNameByIDResponse](#kic.users.GetUserNameByIDResponse) |  |
 
  
 
