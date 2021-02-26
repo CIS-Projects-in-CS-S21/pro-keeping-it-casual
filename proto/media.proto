@@ -2,4 +2,4 @@ syntax = "proto3";
 
 package kic.media;
 
-option go_package = "./proto;proto";
+option go_package = "./proto/media;proto";

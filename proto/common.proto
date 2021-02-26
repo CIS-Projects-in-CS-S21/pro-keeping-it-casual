@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package kic.common;
 
-option go_package = "./proto;proto";
+option go_package = "./proto/common;proto";
 
 
 message User {
@@ -11,7 +11,10 @@ message User {
 }
 
 message File {
+  // Simply the file name with an extension
   string fileName = 1;
+  // This is a client specific file location, for example a google cloud bucket name
   string fileLocation = 2;
+  // Allows for arbitrary key/value metadata which can be client specific
   map<string, string> metadata = 3;
 }

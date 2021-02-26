@@ -1,0 +1,80 @@
+/**
+ * These are messages and services relating to users and user authentication.
+ * Some of the data models that will be used in the end products will be supplied from
+ * the Envoy project, specifically those found here for external authentication
+ * services: https://github.com/envoyproxy/envoy/blob/main/api/envoy/service/auth/v3/external_auth.proto
+ * We will implement the server side logic for the service they define, allowing Istio to
+ * send gRPC requests to our authentication server.
+*/
+syntax = "proto3";
+
+package kic.users;
+
+option go_package = "./proto/users;proto";
+
+/*
+Request for a user to be added to the user database.
+*/
+message AddUserRequest {
+  string email = 1;
+  string desiredUsername = 2;
+  string desiredPassword = 3;
+  // User's birthday in MM/DD/YYYY format.
+  string birthday = 4;
+  // User's city location.
+  string city = 5;
+}
+
+/*
+These are errors used to inform the client requesting a user be added what the issue is.
+The variable names denote the issue.
+*/
+enum AddUserError {
+  // The requested email is taken.
+  DUPLICATE_EMAIL = 0;
+  // The requested username is taken.
+  DUPLICATE_USERNAME = 1;
+  // This is a catchall for passwords that the server has deemed unacceptable,
+  // checking may also be done on the client side.
+  INVALID_PASSWORD = 2;
+  // The sent date was not in the proper format.
+  BIRTHDAY_MALFORMED = 3;
+}
+
+/*
+Response to a request for adding a user to the database.
+*/
+message AddUserResponse {
+  // Denotes if the user was properly created.
+  bool success = 1;
+  // Inform the client of the ID assigned to the user should they be accepted.
+  int64 createdUserID = 2;
+  // Array of errors which need to be fixed by the client.
+  repeated AddUserError errors = 3;
+}
+
+message GetUserByUsernameRequest {
+  string username = 1;
+}
+
+message GetUserByUsernameResponse {
+
+}
+
+message GetUserByIDRequest {
+
+}
+
+message GetUserByIDResponse {
+
+}
+
+/*
+Service handling fetching and storing data about users.
+*/
+service User {
+  rpc AddUser(AddUserRequest) returns (AddUserResponse);
+
+  rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserByUsernameResponse);
+  rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
+}
