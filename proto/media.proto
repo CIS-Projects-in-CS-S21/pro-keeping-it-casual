@@ -3,3 +3,72 @@ syntax = "proto3";
 package kic.media;
 
 option go_package = "./proto/media;proto";
+
+import "proto/common.proto";
+
+message UploadFileRequest {
+  oneof data {
+    kic.common.File fileInfo = 1;
+    bytes chunk = 2;
+  };
+}
+
+message UploadFileResponse {
+  string fileID = 1;
+  uint64 bytesRead = 2;
+}
+
+message CheckForFileRequest {
+  kic.common.File fileInfo = 1;
+}
+
+message CheckForFileResponse {
+  bool exists = 1;
+}
+
+enum DownloadFileByNameError {
+  FILE_NOT_FOUND = 0;
+  BUCKET_NOT_FOUND = 1;
+}
+
+message DownloadFileRequest {
+  kic.common.File fileInfo = 1;
+}
+
+message DownloadFileResponse {
+  oneof data {
+    DownloadFileByNameError error = 1;
+    bytes chunk = 2;
+  };
+}
+
+// Flags sent with a get file by metadata request to tell the server how seriously it wants the metadata request
+// to be conformed to
+enum MetadataStrictness {
+  // Only include a given file if all key value pairs match
+  STRICT = 0;
+  // Include a file if it matches any of the key value pairs
+  CASUAL = 1;
+  // Only include a file if it fails to match all key value pairs
+  STRICTLY_OPPOSITE = 2;
+  // Only include a file if it matches less than all key value pairs
+  CASUALLY_OPPOSITE = 3;
+}
+
+message GetFilesByMetadataRequest {
+  map<string, string> desiredMetadata = 1;
+  MetadataStrictness strictness = 2;
+}
+
+message GetFilesByMetadataResponse {
+  repeated kic.common.File fileInfos = 1;
+}
+
+service MediaStorage {
+  rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
+  rpc DownloadFileByName(DownloadFileRequest) returns (stream DownloadFileResponse);
+
+  rpc CheckForFileByName(CheckForFileRequest) returns (CheckForFileResponse);
+
+  rpc GetFilesWithMetadata(GetFilesByMetadataRequest) returns (GetFilesByMetadataResponse);
+}

@@ -6,8 +6,11 @@ option go_package = "./proto/common;proto";
 
 
 message User {
+  // The ID of the user in the user database, used globally for identification.
   int64 userID = 1;
+  // User's account username.
   string userName = 2;
+  // The email registered by this user.
   string email = 3;
 }
 

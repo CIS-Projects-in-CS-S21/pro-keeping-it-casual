@@ -10,8 +10,28 @@
   
 - [proto/feed.proto](#proto/feed.proto)
 - [proto/friends.proto](#proto/friends.proto)
+    - [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest)
+    - [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse)
+  
+    - [Friends](#kic.friends.Friends)
+  
 - [proto/health.proto](#proto/health.proto)
 - [proto/media.proto](#proto/media.proto)
+    - [CheckForFileRequest](#kic.media.CheckForFileRequest)
+    - [CheckForFileResponse](#kic.media.CheckForFileResponse)
+    - [DownloadFileRequest](#kic.media.DownloadFileRequest)
+    - [DownloadFileResponse](#kic.media.DownloadFileResponse)
+    - [GetFilesByMetadataRequest](#kic.media.GetFilesByMetadataRequest)
+    - [GetFilesByMetadataRequest.DesiredMetadataEntry](#kic.media.GetFilesByMetadataRequest.DesiredMetadataEntry)
+    - [GetFilesByMetadataResponse](#kic.media.GetFilesByMetadataResponse)
+    - [UploadFileRequest](#kic.media.UploadFileRequest)
+    - [UploadFileResponse](#kic.media.UploadFileResponse)
+  
+    - [DownloadFileByNameError](#kic.media.DownloadFileByNameError)
+    - [MetadataStrictness](#kic.media.MetadataStrictness)
+  
+    - [MediaStorage](#kic.media.MediaStorage)
+  
 - [proto/users.proto](#proto/users.proto)
     - [AddUserRequest](#kic.users.AddUserRequest)
     - [AddUserResponse](#kic.users.AddUserResponse)
@@ -76,9 +96,9 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| userID | [int64](#int64) |  |  |
-| userName | [string](#string) |  |  |
-| email | [string](#string) |  |  |
+| userID | [int64](#int64) |  | The ID of the user in the user database, used globally for identification. |
+| userName | [string](#string) |  | User&#39;s account username. |
+| email | [string](#string) |  | The email registered by this user. |
 
 
 
@@ -116,11 +136,41 @@
 ## proto/friends.proto
 
 
- 
+
+<a name="kic.friends.GetFriendsForUserRequest"></a>
+
+### GetFriendsForUserRequest
+
+
+
+
+
+
+
+<a name="kic.friends.GetFriendsForUserResponse"></a>
+
+### GetFriendsForUserResponse
+
+
+
+
+
 
  
 
  
+
+ 
+
+
+<a name="kic.friends.Friends"></a>
+
+### Friends
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| GetFriendsForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse) |  |
 
  
 
@@ -148,11 +198,191 @@
 ## proto/media.proto
 
 
+
+<a name="kic.media.CheckForFileRequest"></a>
+
+### CheckForFileRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fileInfo | [kic.common.File](#kic.common.File) |  |  |
+
+
+
+
+
+
+<a name="kic.media.CheckForFileResponse"></a>
+
+### CheckForFileResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| exists | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="kic.media.DownloadFileRequest"></a>
+
+### DownloadFileRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fileInfo | [kic.common.File](#kic.common.File) |  |  |
+
+
+
+
+
+
+<a name="kic.media.DownloadFileResponse"></a>
+
+### DownloadFileResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| error | [DownloadFileByNameError](#kic.media.DownloadFileByNameError) |  |  |
+| chunk | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="kic.media.GetFilesByMetadataRequest"></a>
+
+### GetFilesByMetadataRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| desiredMetadata | [GetFilesByMetadataRequest.DesiredMetadataEntry](#kic.media.GetFilesByMetadataRequest.DesiredMetadataEntry) | repeated |  |
+| strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  |  |
+
+
+
+
+
+
+<a name="kic.media.GetFilesByMetadataRequest.DesiredMetadataEntry"></a>
+
+### GetFilesByMetadataRequest.DesiredMetadataEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="kic.media.GetFilesByMetadataResponse"></a>
+
+### GetFilesByMetadataResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fileInfos | [kic.common.File](#kic.common.File) | repeated |  |
+
+
+
+
+
+
+<a name="kic.media.UploadFileRequest"></a>
+
+### UploadFileRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fileInfo | [kic.common.File](#kic.common.File) |  |  |
+| chunk | [bytes](#bytes) |  |  |
+
+
+
+
+
+
+<a name="kic.media.UploadFileResponse"></a>
+
+### UploadFileResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fileID | [string](#string) |  |  |
+| bytesRead | [uint64](#uint64) |  |  |
+
+
+
+
+
  
+
+
+<a name="kic.media.DownloadFileByNameError"></a>
+
+### DownloadFileByNameError
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| FILE_NOT_FOUND | 0 |  |
+| BUCKET_NOT_FOUND | 1 |  |
+
+
+
+<a name="kic.media.MetadataStrictness"></a>
+
+### MetadataStrictness
+Flags sent with a get file by metadata request to tell the server how seriously it wants the metadata request
+to be conformed to
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| STRICT | 0 | Only include a given file if all key value pairs match |
+| CASUAL | 1 | Include a file if it matches any of the key value pairs |
+| STRICTLY_OPPOSITE | 2 | Only include a file if it fails to match all key value pairs |
+| CASUALLY_OPPOSITE | 3 | Only include a file if it matches less than all key value pairs |
+
 
  
 
  
+
+
+<a name="kic.media.MediaStorage"></a>
+
+### MediaStorage
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| UploadFile | [UploadFileRequest](#kic.media.UploadFileRequest) stream | [UploadFileResponse](#kic.media.UploadFileResponse) |  |
+| DownloadFileByName | [DownloadFileRequest](#kic.media.DownloadFileRequest) | [DownloadFileResponse](#kic.media.DownloadFileResponse) stream |  |
+| CheckForFileByName | [CheckForFileRequest](#kic.media.CheckForFileRequest) | [CheckForFileResponse](#kic.media.CheckForFileResponse) |  |
+| GetFilesWithMetadata | [GetFilesByMetadataRequest](#kic.media.GetFilesByMetadataRequest) | [GetFilesByMetadataResponse](#kic.media.GetFilesByMetadataResponse) |  |
 
  
 
