@@ -12,18 +12,7 @@ package kic.users;
 
 option go_package = "./proto/users;proto";
 
-/*
-Request for a user to be added to the user database.
-*/
-message AddUserRequest {
-  string email = 1;
-  string desiredUsername = 2;
-  string desiredPassword = 3;
-  // User's birthday in MM/DD/YYYY format.
-  string birthday = 4;
-  // User's city location.
-  string city = 5;
-}
+import "proto/common.proto";
 
 /*
 These are errors used to inform the client requesting a user be added what the issue is.
@@ -41,14 +30,28 @@ enum AddUserError {
   BIRTHDAY_MALFORMED = 3;
 }
 
+
+/*
+Request for a user to be added to the user database.
+*/
+message AddUserRequest {
+  string email = 1;
+  string desiredUsername = 2;
+  string desiredPassword = 3;
+  // User's birthday in MM/DD/YYYY format.
+  string birthday = 4;
+  // User's city location.
+  string city = 5;
+}
+
 /*
 Response to a request for adding a user to the database.
 */
 message AddUserResponse {
   // Denotes if the user was properly created.
   bool success = 1;
-  // Inform the client of the ID assigned to the user should they be accepted.
-  int64 createdUserID = 2;
+  // Inform the client of the information assigned to the user should they be accepted.
+  kic.common.User createdUser = 2;
   // Array of errors which need to be fixed by the client.
   repeated AddUserError errors = 3;
 }
@@ -72,7 +75,7 @@ message GetUserByIDResponse {
 /*
 Service handling fetching and storing data about users.
 */
-service User {
+service UserService {
   rpc AddUser(AddUserRequest) returns (AddUserResponse);
 
   rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserByUsernameResponse);

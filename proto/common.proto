@@ -8,6 +8,7 @@ option go_package = "./proto/common;proto";
 message User {
   int64 userID = 1;
   string userName = 2;
+  string email = 3;
 }
 
 message File {

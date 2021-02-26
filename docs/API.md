@@ -22,7 +22,7 @@
   
     - [AddUserError](#kic.users.AddUserError)
   
-    - [User](#kic.users.User)
+    - [UserService](#kic.users.UserService)
   
 - [Scalar Value Types](#scalar-value-types)
 
@@ -78,6 +78,7 @@
 | ----- | ---- | ----- | ----------- |
 | userID | [int64](#int64) |  |  |
 | userName | [string](#string) |  |  |
+| email | [string](#string) |  |  |
 
 
 
@@ -197,7 +198,7 @@ Response to a request for adding a user to the database.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | success | [bool](#bool) |  | Denotes if the user was properly created. |
-| createdUserID | [int64](#int64) |  | Inform the client of the ID assigned to the user should they be accepted. |
+| createdUser | [kic.common.User](#kic.common.User) |  | Inform the client of the information assigned to the user should they be accepted. |
 | errors | [AddUserError](#kic.users.AddUserError) | repeated | Array of errors which need to be fixed by the client. |
 
 
@@ -271,9 +272,9 @@ The variable names denote the issue.
  
 
 
-<a name="kic.users.User"></a>
+<a name="kic.users.UserService"></a>
 
-### User
+### UserService
 Service handling fetching and storing data about users.
 
 | Method Name | Request Type | Response Type | Description |
