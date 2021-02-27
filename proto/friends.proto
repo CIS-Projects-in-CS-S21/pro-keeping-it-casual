@@ -22,7 +22,7 @@ message GetRecommendationsForUserResponse {
   repeated kic.common.User recommendations = 1;
 }
 
-enum ConnectionErrors {
+enum ConnectionError {
   NO_FRIENDSHIP = 0;
   USER_ONE_DNE = 1;
   USER_TWO_DNE = 2;
@@ -40,15 +40,25 @@ message GetConnectionBetweenUsersRequest {
 }
 
 message ConnectionBetweenUsersResponse {
-  ConnectionErrors error = 1;
+  ConnectionError error = 1;
   float connectionStrength = 2;
+}
+
+message DeleteConnectionBetweenUsersRequest {
+  uint64 firstUserID = 1;
+  uint64 secondUserID = 2;
+}
+
+message DeleteConnectionBetweenUsersResponse {
+  ConnectionError error = 1;
 }
 
 service Friends {
   rpc GetFriendsForUser(GetFriendsForUserRequest) returns (GetFriendsForUserResponse);
-
+  rpc GetConnectionBetweenUsers(GetConnectionBetweenUsersRequest) returns (ConnectionBetweenUsersResponse);
   rpc GetRecommendationsForUser(GetRecommendationsForUserRequest) returns (GetRecommendationsForUserResponse);
 
   rpc UpdateConnectionBetweenUsers(UpdateConnectionBetweenUsersRequest) returns (ConnectionBetweenUsersResponse);
-  rpc GetConnectionBetweenUsers(GetConnectionBetweenUsersRequest) returns (ConnectionBetweenUsersResponse);
+
+  rpc DeleteConnectionBetweenUsers(DeleteConnectionBetweenUsersRequest) returns (DeleteConnectionBetweenUsersResponse);
 }

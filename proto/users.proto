@@ -80,6 +80,29 @@ message GetUserNameByIDResponse {
 
 }
 
+message DeleteUserByIDRequest {
+
+}
+
+message DeleteUserByIDResponse {
+
+}
+
+message UpdateUserInfoRequest {
+  // Only required item is the User id which is used to identify what entry to update,
+  // all other non null fields will be used to update the proper column in the database
+  kic.common.User desiredInfo = 1;
+}
+
+message UpdateUserInfoResponse {
+  // Denotes if the user was properly updated.
+  bool success = 1;
+  // Inform the client of the information assigned to the user.
+  kic.common.User updatedUser = 2;
+  // Array of errors which need to be fixed by the client.
+  repeated AddUserError errors = 3;
+}
+
 /*
 Service handling fetching and storing data about users.
 */
@@ -89,4 +112,8 @@ service UserService {
   rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserByUsernameResponse);
   rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
   rpc GetUserNameByID(GetUserNameByIDRequest) returns (GetUserNameByIDResponse);
+
+  rpc DeleteUserByID(DeleteUserByIDRequest) returns (DeleteUserByIDResponse);
+
+  rpc UpdateUserInfo(UpdateUserInfoRequest) returns (UpdateUserInfoResponse);
 }

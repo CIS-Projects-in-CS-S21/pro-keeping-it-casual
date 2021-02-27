@@ -19,6 +19,8 @@
   
 - [proto/friends.proto](#proto/friends.proto)
     - [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse)
+    - [DeleteConnectionBetweenUsersRequest](#kic.friends.DeleteConnectionBetweenUsersRequest)
+    - [DeleteConnectionBetweenUsersResponse](#kic.friends.DeleteConnectionBetweenUsersResponse)
     - [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest)
     - [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest)
     - [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse)
@@ -26,7 +28,7 @@
     - [GetRecommendationsForUserResponse](#kic.friends.GetRecommendationsForUserResponse)
     - [UpdateConnectionBetweenUsersRequest](#kic.friends.UpdateConnectionBetweenUsersRequest)
   
-    - [ConnectionErrors](#kic.friends.ConnectionErrors)
+    - [ConnectionError](#kic.friends.ConnectionError)
   
     - [Friends](#kic.friends.Friends)
   
@@ -63,12 +65,16 @@
 - [proto/users.proto](#proto/users.proto)
     - [AddUserRequest](#kic.users.AddUserRequest)
     - [AddUserResponse](#kic.users.AddUserResponse)
+    - [DeleteUserByIDRequest](#kic.users.DeleteUserByIDRequest)
+    - [DeleteUserByIDResponse](#kic.users.DeleteUserByIDResponse)
     - [GetUserByIDRequest](#kic.users.GetUserByIDRequest)
     - [GetUserByIDResponse](#kic.users.GetUserByIDResponse)
     - [GetUserByUsernameRequest](#kic.users.GetUserByUsernameRequest)
     - [GetUserByUsernameResponse](#kic.users.GetUserByUsernameResponse)
     - [GetUserNameByIDRequest](#kic.users.GetUserNameByIDRequest)
     - [GetUserNameByIDResponse](#kic.users.GetUserNameByIDResponse)
+    - [UpdateUserInfoRequest](#kic.users.UpdateUserInfoRequest)
+    - [UpdateUserInfoResponse](#kic.users.UpdateUserInfoResponse)
   
     - [AddUserError](#kic.users.AddUserError)
   
@@ -245,8 +251,39 @@
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| error | [ConnectionErrors](#kic.friends.ConnectionErrors) |  |  |
+| error | [ConnectionError](#kic.friends.ConnectionError) |  |  |
 | connectionStrength | [float](#float) |  |  |
+
+
+
+
+
+
+<a name="kic.friends.DeleteConnectionBetweenUsersRequest"></a>
+
+### DeleteConnectionBetweenUsersRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| firstUserID | [uint64](#uint64) |  |  |
+| secondUserID | [uint64](#uint64) |  |  |
+
+
+
+
+
+
+<a name="kic.friends.DeleteConnectionBetweenUsersResponse"></a>
+
+### DeleteConnectionBetweenUsersResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| error | [ConnectionError](#kic.friends.ConnectionError) |  |  |
 
 
 
@@ -348,9 +385,9 @@
  
 
 
-<a name="kic.friends.ConnectionErrors"></a>
+<a name="kic.friends.ConnectionError"></a>
 
-### ConnectionErrors
+### ConnectionError
 
 
 | Name | Number | Description |
@@ -373,9 +410,10 @@
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | GetFriendsForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse) |  |
+| GetConnectionBetweenUsers | [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) |  |
 | GetRecommendationsForUser | [GetRecommendationsForUserRequest](#kic.friends.GetRecommendationsForUserRequest) | [GetRecommendationsForUserResponse](#kic.friends.GetRecommendationsForUserResponse) |  |
 | UpdateConnectionBetweenUsers | [UpdateConnectionBetweenUsersRequest](#kic.friends.UpdateConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) |  |
-| GetConnectionBetweenUsers | [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) |  |
+| DeleteConnectionBetweenUsers | [DeleteConnectionBetweenUsersRequest](#kic.friends.DeleteConnectionBetweenUsersRequest) | [DeleteConnectionBetweenUsersResponse](#kic.friends.DeleteConnectionBetweenUsersResponse) |  |
 
  
 
@@ -793,6 +831,26 @@ Response to a request for adding a user to the database.
 
 
 
+<a name="kic.users.DeleteUserByIDRequest"></a>
+
+### DeleteUserByIDRequest
+
+
+
+
+
+
+
+<a name="kic.users.DeleteUserByIDResponse"></a>
+
+### DeleteUserByIDResponse
+
+
+
+
+
+
+
 <a name="kic.users.GetUserByIDRequest"></a>
 
 ### GetUserByIDRequest
@@ -857,6 +915,38 @@ Response to a request for adding a user to the database.
 
 
 
+
+<a name="kic.users.UpdateUserInfoRequest"></a>
+
+### UpdateUserInfoRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| desiredInfo | [kic.common.User](#kic.common.User) |  | Only required item is the User id which is used to identify what entry to update, all other non null fields will be used to update the proper column in the database |
+
+
+
+
+
+
+<a name="kic.users.UpdateUserInfoResponse"></a>
+
+### UpdateUserInfoResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| success | [bool](#bool) |  | Denotes if the user was properly updated. |
+| updatedUser | [kic.common.User](#kic.common.User) |  | Inform the client of the information assigned to the user. |
+| errors | [AddUserError](#kic.users.AddUserError) | repeated | Array of errors which need to be fixed by the client. |
+
+
+
+
+
  
 
 
@@ -890,6 +980,8 @@ Service handling fetching and storing data about users.
 | GetUserByUsername | [GetUserByUsernameRequest](#kic.users.GetUserByUsernameRequest) | [GetUserByUsernameResponse](#kic.users.GetUserByUsernameResponse) |  |
 | GetUserByID | [GetUserByIDRequest](#kic.users.GetUserByIDRequest) | [GetUserByIDResponse](#kic.users.GetUserByIDResponse) |  |
 | GetUserNameByID | [GetUserNameByIDRequest](#kic.users.GetUserNameByIDRequest) | [GetUserNameByIDResponse](#kic.users.GetUserNameByIDResponse) |  |
+| DeleteUserByID | [DeleteUserByIDRequest](#kic.users.DeleteUserByIDRequest) | [DeleteUserByIDResponse](#kic.users.DeleteUserByIDResponse) |  |
+| UpdateUserInfo | [UpdateUserInfoRequest](#kic.users.UpdateUserInfoRequest) | [UpdateUserInfoResponse](#kic.users.UpdateUserInfoResponse) |  |
 
  
 
