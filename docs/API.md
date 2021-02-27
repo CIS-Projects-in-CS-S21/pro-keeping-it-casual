@@ -4,11 +4,19 @@
 ## Table of Contents
 
 - [proto/common.proto](#proto/common.proto)
+    - [Date](#kic.common.Date)
     - [File](#kic.common.File)
     - [File.MetadataEntry](#kic.common.File.MetadataEntry)
     - [User](#kic.common.User)
   
 - [proto/feed.proto](#proto/feed.proto)
+    - [GenerateFeedForUserRequest](#kic.feed.GenerateFeedForUserRequest)
+    - [GenerateFeedForUserResponse](#kic.feed.GenerateFeedForUserResponse)
+  
+    - [GenerateFeedError](#kic.feed.GenerateFeedError)
+  
+    - [Feed](#kic.feed.Feed)
+  
 - [proto/friends.proto](#proto/friends.proto)
     - [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse)
     - [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest)
@@ -23,6 +31,19 @@
     - [Friends](#kic.friends.Friends)
   
 - [proto/health.proto](#proto/health.proto)
+    - [AddHealthDataForUserRequest](#kic.health.AddHealthDataForUserRequest)
+    - [DeleteHealthDataForUserRequest](#kic.health.DeleteHealthDataForUserRequest)
+    - [DeleteHealthDataForUserResponse](#kic.health.DeleteHealthDataForUserResponse)
+    - [GetHealthDataForUserRequest](#kic.health.GetHealthDataForUserRequest)
+    - [GetHealthDataForUserResponse](#kic.health.GetHealthDataForUserResponse)
+    - [HealthDataErrorResponse](#kic.health.HealthDataErrorResponse)
+    - [MentalHealthLog](#kic.health.MentalHealthLog)
+    - [UpdateHealthDataForDateRequest](#kic.health.UpdateHealthDataForDateRequest)
+  
+    - [HealthDataError](#kic.health.HealthDataError)
+  
+    - [HealthTracking](#kic.health.HealthTracking)
+  
 - [proto/media.proto](#proto/media.proto)
     - [CheckForFileRequest](#kic.media.CheckForFileRequest)
     - [CheckForFileResponse](#kic.media.CheckForFileResponse)
@@ -61,6 +82,23 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## proto/common.proto
+
+
+
+<a name="kic.common.Date"></a>
+
+### Date
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| year | [int32](#int32) |  | Year of the date. Must be from 1 to 9999, or 0 to specify a date without a year. |
+| month | [int32](#int32) |  | Month of a year. Must be from 1 to 12, or 0 to specify a year without a month and day. |
+| day | [int32](#int32) |  | Day of a month. Must be from 1 to 31 and valid for the year and month, or 0 to specify a year by itself or a year and month where the day isn&#39;t significant. |
+
+
+
 
 
 
@@ -129,11 +167,64 @@
 ## proto/feed.proto
 
 
+
+<a name="kic.feed.GenerateFeedForUserRequest"></a>
+
+### GenerateFeedForUserRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| userID | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="kic.feed.GenerateFeedForUserResponse"></a>
+
+### GenerateFeedForUserResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| fileInfo | [kic.common.File](#kic.common.File) |  |  |
+| error | [GenerateFeedError](#kic.feed.GenerateFeedError) |  |  |
+
+
+
+
+
  
+
+
+<a name="kic.feed.GenerateFeedError"></a>
+
+### GenerateFeedError
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| USER_NOT_FOUND | 0 |  |
+| OUT_OF_POSTS | 1 |  |
+
 
  
 
  
+
+
+<a name="kic.feed.Feed"></a>
+
+### Feed
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| GenerateFeedForUser | [GenerateFeedForUserRequest](#kic.feed.GenerateFeedForUserRequest) | [GenerateFeedForUserResponse](#kic.feed.GenerateFeedForUserResponse) stream |  |
 
  
 
@@ -296,11 +387,163 @@
 ## proto/health.proto
 
 
+
+<a name="kic.health.AddHealthDataForUserRequest"></a>
+
+### AddHealthDataForUserRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| userID | [int64](#int64) |  |  |
+| newEntry | [MentalHealthLog](#kic.health.MentalHealthLog) |  |  |
+
+
+
+
+
+
+<a name="kic.health.DeleteHealthDataForUserRequest"></a>
+
+### DeleteHealthDataForUserRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| userID | [int64](#int64) |  |  |
+| all | [bool](#bool) |  |  |
+| dateToRemove | [kic.common.Date](#kic.common.Date) |  |  |
+
+
+
+
+
+
+<a name="kic.health.DeleteHealthDataForUserResponse"></a>
+
+### DeleteHealthDataForUserResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| error | [HealthDataError](#kic.health.HealthDataError) |  |  |
+| entriesDeleted | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="kic.health.GetHealthDataForUserRequest"></a>
+
+### GetHealthDataForUserRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| userID | [int64](#int64) |  |  |
+
+
+
+
+
+
+<a name="kic.health.GetHealthDataForUserResponse"></a>
+
+### GetHealthDataForUserResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| error | [HealthDataError](#kic.health.HealthDataError) |  |  |
+| healthData | [MentalHealthLog](#kic.health.MentalHealthLog) | repeated |  |
+
+
+
+
+
+
+<a name="kic.health.HealthDataErrorResponse"></a>
+
+### HealthDataErrorResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| error | [HealthDataError](#kic.health.HealthDataError) |  |  |
+
+
+
+
+
+
+<a name="kic.health.MentalHealthLog"></a>
+
+### MentalHealthLog
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| logDate | [kic.common.Date](#kic.common.Date) |  |  |
+| score | [uint32](#uint32) |  |  |
+
+
+
+
+
+
+<a name="kic.health.UpdateHealthDataForDateRequest"></a>
+
+### UpdateHealthDataForDateRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| userID | [int64](#int64) |  |  |
+| desiredLogInfo | [MentalHealthLog](#kic.health.MentalHealthLog) |  |  |
+
+
+
+
+
  
+
+
+<a name="kic.health.HealthDataError"></a>
+
+### HealthDataError
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| USER_NOT_FOUND | 0 |  |
+| DATE_NOT_FOUND | 1 |  |
+
 
  
 
  
+
+
+<a name="kic.health.HealthTracking"></a>
+
+### HealthTracking
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| GetHealthDataForUser | [GetHealthDataForUserRequest](#kic.health.GetHealthDataForUserRequest) | [GetHealthDataForUserResponse](#kic.health.GetHealthDataForUserResponse) |  |
+| AddHealthDataForUser | [AddHealthDataForUserRequest](#kic.health.AddHealthDataForUserRequest) | [HealthDataErrorResponse](#kic.health.HealthDataErrorResponse) |  |
+| DeleteHealthDataForUser | [DeleteHealthDataForUserRequest](#kic.health.DeleteHealthDataForUserRequest) | [DeleteHealthDataForUserResponse](#kic.health.DeleteHealthDataForUserResponse) |  |
+| UpdateHealthDataForDate | [UpdateHealthDataForDateRequest](#kic.health.UpdateHealthDataForDateRequest) | [HealthDataErrorResponse](#kic.health.HealthDataErrorResponse) |  |
 
  
 
@@ -525,7 +768,7 @@ Request for a user to be added to the user database.
 | email | [string](#string) |  |  |
 | desiredUsername | [string](#string) |  |  |
 | desiredPassword | [string](#string) |  |  |
-| birthday | [string](#string) |  | User&#39;s birthday in MM/DD/YYYY format. |
+| birthday | [kic.common.Date](#kic.common.Date) |  | User&#39;s birthday in MM/DD/YYYY format. |
 | city | [string](#string) |  | User&#39;s city location. |
 
 
