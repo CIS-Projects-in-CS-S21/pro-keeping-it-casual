@@ -7,22 +7,28 @@ option go_package = "./proto/feed;proto";
 import "proto/common.proto";
 
 enum GenerateFeedError {
+  // The constant representing when a user is not found.
   USER_NOT_FOUND = 0;
+  // The constant representing when the feed has no more posts to show a user.
   OUT_OF_POSTS  = 1;
 }
 
 message GenerateFeedForUserRequest {
+  // The ID of the user in the user database, used globally for identification.
   int64 userID = 1;
 }
 
 message GenerateFeedForUserResponse {
   oneof data {
+    // The file being pulled, consisting of the file name, file location, and metadata.
     kic.common.File fileInfo = 1;
+    // The error occurring when the feed is generated.
     GenerateFeedError error = 2;
   }
 }
 
 
 service Feed {
+  // The feed of posts.
   rpc GenerateFeedForUser(GenerateFeedForUserRequest) returns (stream GenerateFeedForUserResponse);
 }
