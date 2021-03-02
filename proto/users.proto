@@ -106,7 +106,7 @@ message UpdateUserInfoResponse {
 /*
 Service handling fetching and storing data about users.
 */
-service UserService {
+service Users {
   rpc AddUser(AddUserRequest) returns (AddUserResponse);
 
   rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserByUsernameResponse);
