@@ -1,3 +1,11 @@
+/**
+ * These are messages and services relating to mental health tracking data.
+ * Some of the data models that will be used in the end products will be supplied from
+ * the Envoy project, specifically those found here for external authentication
+ * services: https://github.com/envoyproxy/envoy/blob/main/api/envoy/service/auth/v3/external_auth.proto
+ * We will implement the server side logic for the service they define, allowing Istio to
+ * send gRPC requests to our authentication server.
+*/
 syntax = "proto3";
 
 package kic.health;
@@ -7,36 +15,63 @@ option go_package = "./proto/health;proto";
 import "proto/common.proto";
 import "google/protobuf/timestamp.proto";
 
-
+/*
+These are errors used to inform the client requesting health data what the issue is.
+The variable names denote the issue.
+*/
 enum HealthDataError {
+  //USER_NOT_FOUND denotes if user is not found.
   USER_NOT_FOUND = 0;
+  //DATE_NOT_FOUND denotes if date is not found.
   DATE_NOT_FOUND = 1;
 }
 
+/*
+Response to a user when there is a mental health data error.
+*/
 message HealthDataErrorResponse {
+  //HealthDataError
   HealthDataError error = 1;
 }
 
+/*
+Request from a user to be get their mental health tracking data.
+*/
 message GetHealthDataForUserRequest {
+  // The ID of the user in the user database, used globally for identification.
   int64 userID = 1;
 }
 
+/*
+Response to a user with complete mental health log
+*/
 message MentalHealthLog {
   kic.common.Date logDate = 1;
   uint32 score = 2;
 }
 
+/*
+Response to a user when user asks for health data.
+*/
 message GetHealthDataForUserResponse {
   HealthDataError error = 1;
   repeated MentalHealthLog healthData = 2;
 }
 
+/*
+Request from a user to add their mental health data to MentalHealthLog.
+*/
 message AddHealthDataForUserRequest {
+  // The ID of the user in the user database, used globally for identification.
   int64 userID = 1;
   MentalHealthLog newEntry = 2;
 }
 
+/*
+Request from a user to delete their mental health data from MentalHealthLog.
+*/
 message DeleteHealthDataForUserRequest {
+  // The ID of the user in the user database, used globally for identification.
   int64 userID = 1;
   oneof data {
     bool all = 2;
@@ -44,12 +79,19 @@ message DeleteHealthDataForUserRequest {
   }
 }
 
+/*
+Response to a user when user asks to delete health data.
+*/
 message DeleteHealthDataForUserResponse {
   HealthDataError error = 1;
   uint32 entriesDeleted = 2;
 }
 
+/*
+Request from a user to update their mental health tracking data for a particular date.
+*/
 message UpdateHealthDataForDateRequest {
+  // The ID of the user in the user database, used globally for identification.
   int64 userID = 1;
   MentalHealthLog desiredLogInfo = 2;
 }
