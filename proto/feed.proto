@@ -1,3 +1,7 @@
+/**
+ * These are messages and services relating to a user feed, such as viewing and generating the feed.
+*/
+
 syntax = "proto3";
 
 package kic.feed;
@@ -6,6 +10,10 @@ option go_package = "./proto/feed;proto";
 
 import "proto/common.proto";
 
+/*
+These are errors used to inform the client that is requesting a connection what the issue is.
+The variable names denote the issue.
+*/
 enum GenerateFeedError {
   // The constant representing when a user is not found.
   USER_NOT_FOUND = 0;
@@ -13,11 +21,17 @@ enum GenerateFeedError {
   OUT_OF_POSTS  = 1;
 }
 
+/*
+Request to generate user feed for the user.
+ */
 message GenerateFeedForUserRequest {
   // The ID of the user in the user database, used globally for identification.
   int64 userID = 1;
 }
 
+/*
+Response to a request for generating feed for the user.
+ */
 message GenerateFeedForUserResponse {
   oneof data {
     // The file being pulled, consisting of the file name, file location, and metadata.
@@ -27,7 +41,9 @@ message GenerateFeedForUserResponse {
   }
 }
 
-
+/*
+Service handling generating data for user feed
+*/
 service Feed {
   // The feed of posts.
   rpc GenerateFeedForUser(GenerateFeedForUserRequest) returns (stream GenerateFeedForUserResponse);
