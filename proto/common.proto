@@ -1,0 +1,52 @@
+/**
+ * These are messages used commonly throughout the rest of the proto files within the project.
+*/
+syntax = "proto3";
+
+package kic.common;
+
+option go_package = "./proto/common;proto";
+
+/*
+A representation of a User that will be used to identify them between services.
+ */
+message User {
+  // The ID of the user in the user database, used globally for identification.
+  int64 userID = 1;
+  // User's account username.
+  string userName = 2;
+  // The email registered by this user.
+  string email = 3;
+}
+
+/*
+A file representation that denotes the name, extension and where to find the file. Additionally, arbitrary
+metadata is allowed through key value pairs, which allows for example a file to be tagged as owned by a particular
+user.
+ */
+message File {
+  // Simply the file name with an extension
+  string fileName = 1;
+  // This is a client specific file location, for example a google cloud bucket name
+  string fileLocation = 2;
+  // Allows for arbitrary key/value metadata which can be client specific
+  map<string, string> metadata = 3;
+}
+
+/*
+A representation of days of the year including month, year and day.
+ */
+message Date {
+  // Year of the date. Must be from 1 to 9999, or 0 to specify a date without
+  // a year.
+  int32 year = 1;
+
+  // Month of a year. Must be from 1 to 12, or 0 to specify a year without a
+  // month and day.
+  int32 month = 2;
+
+  // Day of a month. Must be from 1 to 31 and valid for the year and month, or 0
+  // to specify a year by itself or a year and month where the day isn't
+  // significant.
+  int32 day = 3;
+}

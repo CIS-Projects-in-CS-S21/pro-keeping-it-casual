@@ -1,0 +1,216 @@
+/**
+ * These are messages and services relating to users and user authentication.
+ * Some of the data models that will be used in the end products will be supplied from
+ * the Envoy project, specifically those found here for external authentication
+ * services: https://github.com/envoyproxy/envoy/blob/main/api/envoy/service/auth/v3/external_auth.proto
+ * We will implement the server side logic for the service they define, allowing Istio to
+ * send gRPC requests to our authentication server.
+*/
+syntax = "proto3";
+
+package kic.users;
+
+option go_package = "./proto/users;proto";
+
+import "proto/common.proto";
+
+/*
+These are errors used to inform the client requesting a user be added what the issue is.
+The variable names denote the issue.
+*/
+enum AddUserError {
+  // The requested email is taken.
+  DUPLICATE_EMAIL = 0;
+  // The requested username is taken.
+  DUPLICATE_USERNAME = 1;
+  // This is a catchall for passwords that the server has deemed unacceptable,
+  // checking may also be done on the client side.
+  INVALID_PASSWORD = 2;
+  // The sent date was not in the proper format.
+  BIRTHDAY_MALFORMED = 3;
+}
+
+/*
+These are errors used to inform the client requesting a user what the issue is.
+The variable names denote the issue.
+*/
+enum GetUserError {
+  // The given username does not match any records
+  INVALID_USERNAME = 0;
+  // User ID does not exist
+  INVALID_ID = 1;
+}
+
+
+
+/*
+Request for a user to be added to the user database.
+*/
+message AddUserRequest {
+  string email = 1;
+  string desiredUsername = 2;
+  string desiredPassword = 3;
+  // User's birthday in MM/DD/YYYY format.
+  kic.common.Date birthday = 4;
+  // User's city location.
+  string city = 5;
+}
+
+/*
+Response to a request for adding a user to the database.
+*/
+message AddUserResponse {
+  // Denotes if the user was properly created.
+  bool success = 1;
+  // Inform the client of the information assigned to the user should they be accepted.
+  kic.common.User createdUser = 2;
+  // Array of errors which need to be fixed by the client.
+  repeated AddUserError errors = 3;
+}
+
+/*
+Request for obtaining user data from username
+ */
+message GetUserByUsernameRequest {
+  // username sent in request
+  string username = 1;
+}
+
+/*
+Response to a request for obtaining user data from a username
+ */
+message GetUserByUsernameResponse {
+  // denotes if the user was successfully found
+  bool success = 1;
+  // User returned in response
+  kic.common.User user = 2;
+  // Array of errors for getting user by username
+  repeated GetUserError errors = 3;
+}
+
+/*
+Request for obtaining userdata from id
+ */
+message GetUserByIDRequest {
+  // User ID sent in request
+  int64 userID = 1;
+}
+
+/*
+Response to a request for obtaining user data from user id
+ */
+message GetUserByIDResponse {
+  // denotes if the user was successfully found
+  bool success = 1;
+  // User returned in response
+  kic.common.User user = 2;
+  // Array of errors for getting user by username
+  repeated GetUserError errors = 3;
+}
+
+/*
+Request for obtaining username from user id
+ */
+message GetUserNameByIDRequest {
+  // User ID sent in request
+  int64 userID = 1;
+}
+
+/*
+Response to a request for obtaining username from user id
+ */
+message GetUserNameByIDResponse {
+  // Username associated with the given user id
+  string username = 1;
+}
+
+/*
+Request to delete a user with a given user id
+ */
+message DeleteUserByIDRequest {
+  // User ID sent in request
+  int64 userID = 1;
+}
+
+/*
+Response to a request to delete a user with a given user id
+ */
+message DeleteUserByIDResponse {
+  // Denotes if the user was successfully deleted.
+  bool success = 1;
+  // Inform the client of the information assigned to the user should they be accepted.
+  kic.common.User deletedUser = 2;
+}
+
+/*
+Request to update a user's information with the information provided
+ */
+message UpdateUserInfoRequest {
+  // Only required item is the User id which is used to identify what entry to update,
+  // all other non null fields will be used to update the proper column in the database
+  kic.common.User desiredInfo = 1;
+}
+
+/*
+Response to a request to update a user's information with the information provided
+ */
+message UpdateUserInfoResponse {
+  // Denotes if the user was properly updated.
+  bool success = 1;
+  // Inform the client of the information assigned to the user.
+  kic.common.User updatedUser = 2;
+  // Array of errors which need to be fixed by the client.
+  repeated AddUserError errors = 3;
+}
+
+/*
+A Request to the server to return a JWT token to authenticate the remainder of the session with the given user.
+*/
+message GetJWTTokenRequest {
+  // Requesting user's username
+  string username = 1;
+  // Requesting user's password
+  string password = 2;
+}
+
+/*
+The server response to a client request for a JWT, either providing the token or an error response.
+*/
+message GetJWTTokenResponse {
+  // Return the token as a string should the client send proper credentials
+  string token = 1;
+  // Errors with the request that the client will need to fix
+  enum JWTError {
+    // Incorrect password sent
+    INVALID_PASSWORD = 0;
+    // Incorrect username sent
+    INVALID_USERNAME = 1;
+  }
+  // Tell the client the issue with the request should one exist
+  JWTError error = 2;
+}
+
+/*
+Service handling fetching and storing data about users.
+*/
+service Users {
+  // Authenticate the client session and return a JWT that can be utilized for all further contact requiring
+  // authentication
+  rpc GetJWTToken(GetJWTTokenRequest) returns (GetJWTTokenResponse) ;
+
+  // Add a new user to the database.
+  rpc AddUser(AddUserRequest) returns (AddUserResponse);
+
+  // Request user information from a username.
+  rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserByUsernameResponse);
+  // Request user information from a User ID.
+  rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
+  // Request only a username from a User ID.
+  rpc GetUserNameByID(GetUserNameByIDRequest) returns (GetUserNameByIDResponse);
+
+  // Delete the user with the given ID, this will need to cascade to other services.
+  rpc DeleteUserByID(DeleteUserByIDRequest) returns (DeleteUserByIDResponse);
+
+  // Update a user's information to that sent by the client.
+  rpc UpdateUserInfo(UpdateUserInfoRequest) returns (UpdateUserInfoResponse);
+}

@@ -1,0 +1,119 @@
+/**
+ * These are messages and services relating to mental health tracking data, allowing for
+ * the logging of user mental health data and tracking the quality of their mental health state
+ * from day to day.
+*/
+syntax = "proto3";
+
+package kic.health;
+
+option go_package = "./proto/health;proto";
+
+import "proto/common.proto";
+import "google/protobuf/timestamp.proto";
+
+/*
+These are errors used to inform the client requesting health data what the issue is.
+The variable names denote the issue.
+*/
+enum HealthDataError {
+  //USER_NOT_FOUND denotes if user is not found.
+  USER_NOT_FOUND = 0;
+  //DATE_NOT_FOUND denotes if date is not found.
+  DATE_NOT_FOUND = 1;
+}
+
+/*
+Response to a user when there is a mental health data error.
+*/
+message HealthDataErrorResponse {
+  //Error denotes if error occurred with health data.
+  HealthDataError error = 1;
+}
+
+/*
+Request from a user to get their mental health tracking data.
+*/
+message GetHealthDataForUserRequest {
+  // The ID of the user in the user database, used globally for identification.
+  int64 userID = 1;
+}
+
+/*
+Response to a user with complete mental health log
+*/
+message MentalHealthLog {
+  //Date of Mental Health Log Entry
+  kic.common.Date logDate = 1;
+  //Score denotes the mental health tracking score from logDate.
+  uint32 score = 2;
+}
+
+/*
+Response to a user when user asks for health data.
+*/
+message GetHealthDataForUserResponse {
+  //Error denotes if error occurred when obtaining health data and what the error was.
+  HealthDataError error = 1;
+  //healthData denotes the data that was requested by user from mental health log
+  repeated MentalHealthLog healthData = 2;
+}
+
+/*
+Request from a user to add their mental health data to MentalHealthLog.
+*/
+message AddHealthDataForUserRequest {
+  // The ID of the user in the user database, used globally for identification.
+  int64 userID = 1;
+  //newEntry denotes the ID of the new entry that is requested to be made.
+  MentalHealthLog newEntry = 2;
+}
+
+/*
+Request from a user to delete their mental health data from MentalHealthLog.
+*/
+message DeleteHealthDataForUserRequest {
+  // The ID of the user in the user database, used globally for identification.
+  int64 userID = 1;
+  //Either delete all of data or delete specific date
+  oneof data {
+    //all denotes if all of the health data should be removed or not.
+    bool all = 2;
+    //dateToRemove denotes the date of the mental health log data to remove.
+    kic.common.Date dateToRemove = 3;
+  }
+}
+
+/*
+Response to a user when user asks to delete health data.
+*/
+message DeleteHealthDataForUserResponse {
+  //Error denotes if error occurred when deleting health data and the ID of the error it was.
+  HealthDataError error = 1;
+  //entriesDeleted denotes the mental health log entries that was successfully deleted for the user
+  uint32 entriesDeleted = 2;
+}
+
+/*
+Request from a user to update their mental health tracking data for a particular date.
+*/
+message UpdateHealthDataForDateRequest {
+  // The ID of the user in the user database, used globally for identification.
+  int64 userID = 1;
+  //The desiredLogInfo denotes the log info that the user would like to update.
+  MentalHealthLog desiredLogInfo = 2;
+}
+
+/*
+Service handling fetching and storing mental health tracking data about users.
+*/
+service HealthTracking {
+  //Given health data obtained upon user request, said health data is returned to user.
+  rpc GetHealthDataForUser(GetHealthDataForUserRequest) returns (GetHealthDataForUserResponse);
+  //Health data requested to be added by user is added, and error is returned if appropriate.
+  rpc AddHealthDataForUser(AddHealthDataForUserRequest) returns (HealthDataErrorResponse);
+  //Health data requested by user to be deleted is deleted and said deleted entries are returned to user.
+  rpc DeleteHealthDataForUser(DeleteHealthDataForUserRequest) returns (DeleteHealthDataForUserResponse);
+  //Health data requested to be updated by user is updated, and error is returned if appropriate.
+  rpc UpdateHealthDataForDate(UpdateHealthDataForDateRequest) returns (HealthDataErrorResponse);
+}
