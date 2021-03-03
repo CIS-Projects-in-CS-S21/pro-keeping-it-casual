@@ -30,6 +30,19 @@ enum AddUserError {
   BIRTHDAY_MALFORMED = 3;
 }
 
+/*
+These are errors used to inform the client requesting a user by username what the issue is.
+The variable names denote the issue.
+*/
+enum GetUserError {
+  // The given username does not match any records
+  INVALID_USERNAME = 0;
+  // Unable to connect to the database of users
+  BAD_CONNECTION = 1;
+
+}
+
+
 
 /*
 Request for a user to be added to the user database.
@@ -56,44 +69,93 @@ message AddUserResponse {
   repeated AddUserError errors = 3;
 }
 
+/*
+Request for obtaining user data from username
+ */
 message GetUserByUsernameRequest {
+  // username sent in request
   string username = 1;
 }
 
+/*
+Response to a request for obtaining user data from a username
+ */
 message GetUserByUsernameResponse {
-
+  // denotes if the user was successfully found
+  bool success = 1;
+  // User returned in response
+  kic.common.User user = 2;
+  // Array of errors for getting user by username
+  repeated GetUserError errors = 3;
 }
 
+/*
+Request for obtaining userdata from id
+ */
 message GetUserByIDRequest {
-
+  int64 userID = 1;
 }
 
+/*
+Response to a request for obtaining user data from user id
+ */
 message GetUserByIDResponse {
-
+  // denotes if the user was successfully found
+  bool success = 1;
+  // User returned in response
+  kic.common.User user = 2;
+  // Array of errors for getting user by username
+  repeated GetUserError errors = 3;
 }
 
+/*
+Request for obtaining username from user id
+ */
 message GetUserNameByIDRequest {
-
+  // user id sent in request
+  int64 userID = 1;
 }
 
+/*
+Response to a request for obtaining username from user id
+ */
 message GetUserNameByIDResponse {
-
+  // username associated with the given user id
+  string username = 1;
 }
 
+/*
+Request to delete a user with a given user id
+ */
 message DeleteUserByIDRequest {
-
+  // user id sent in request
+  int64 userID = 1;
 }
 
+/*
+Response to a request to delete a user with a given user id
+ */
 message DeleteUserByIDResponse {
-
+  // Denotes if the user was successfully deleted.
+  bool success = 1;
+  // Inform the client of the information assigned to the user should they be accepted.
+  kic.common.User deletedUser = 2;
+  // Array of errors which need to be fixed by the client.
+  repeated GetUserError errors = 3;
 }
 
+/*
+Request to update a user's information with the information provided
+ */
 message UpdateUserInfoRequest {
   // Only required item is the User id which is used to identify what entry to update,
   // all other non null fields will be used to update the proper column in the database
   kic.common.User desiredInfo = 1;
 }
 
+/*
+Response to a request to update a user's information with the information provided
+ */
 message UpdateUserInfoResponse {
   // Denotes if the user was properly updated.
   bool success = 1;
