@@ -92,6 +92,7 @@ message GetUserByUsernameResponse {
 Request for obtaining userdata from id
  */
 message GetUserByIDRequest {
+  // User ID sent in request
   int64 userID = 1;
 }
 
@@ -111,7 +112,7 @@ message GetUserByIDResponse {
 Request for obtaining username from user id
  */
 message GetUserNameByIDRequest {
-  // user id sent in request
+  // User ID sent in request
   int64 userID = 1;
 }
 
@@ -119,7 +120,7 @@ message GetUserNameByIDRequest {
 Response to a request for obtaining username from user id
  */
 message GetUserNameByIDResponse {
-  // username associated with the given user id
+  // Username associated with the given user id
   string username = 1;
 }
 
@@ -127,7 +128,7 @@ message GetUserNameByIDResponse {
 Request to delete a user with a given user id
  */
 message DeleteUserByIDRequest {
-  // user id sent in request
+  // User ID sent in request
   int64 userID = 1;
 }
 

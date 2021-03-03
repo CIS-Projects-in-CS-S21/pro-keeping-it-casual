@@ -951,7 +951,7 @@ Request to delete a user with a given user id
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| userID | [int64](#int64) |  | user id sent in request |
+| userID | [int64](#int64) |  | User ID sent in request |
 
 
 
@@ -1014,7 +1014,7 @@ Request for obtaining userdata from id
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| userID | [int64](#int64) |  |  |
+| userID | [int64](#int64) |  | User ID sent in request |
 
 
 
@@ -1078,7 +1078,7 @@ Request for obtaining username from user id
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| userID | [int64](#int64) |  | user id sent in request |
+| userID | [int64](#int64) |  | User ID sent in request |
 
 
 
@@ -1093,7 +1093,7 @@ Response to a request for obtaining username from user id
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| username | [string](#string) |  | username associated with the given user id |
+| username | [string](#string) |  | Username associated with the given user id |
 
 
 
