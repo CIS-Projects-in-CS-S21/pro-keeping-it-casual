@@ -19,6 +19,8 @@
   
 - [proto/friends.proto](#proto/friends.proto)
     - [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse)
+    - [CreateConnectionForUsersRequest](#kic.friends.CreateConnectionForUsersRequest)
+    - [CreateConnectionForUsersResponse](#kic.friends.CreateConnectionForUsersResponse)
     - [DeleteConnectionBetweenUsersRequest](#kic.friends.DeleteConnectionBetweenUsersRequest)
     - [DeleteConnectionBetweenUsersResponse](#kic.friends.DeleteConnectionBetweenUsersResponse)
     - [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest)
@@ -102,7 +104,7 @@
 <a name="kic.common.Date"></a>
 
 ### Date
-
+A representation of days of the year including month, year and day.
 
 
 | Field | Type | Label | Description |
@@ -119,7 +121,9 @@
 <a name="kic.common.File"></a>
 
 ### File
-
+A file representation that denotes the name, extension and where to find the file. Additionally, arbitrary
+metadata is allowed through key value pairs, which allows for example a file to be tagged as owned by a particular
+user.
 
 
 | Field | Type | Label | Description |
@@ -152,7 +156,7 @@
 <a name="kic.common.User"></a>
 
 ### User
-
+A representation of a User that will be used to identify them between services.
 
 
 | Field | Type | Label | Description |
@@ -185,7 +189,7 @@
 <a name="kic.feed.GenerateFeedForUserRequest"></a>
 
 ### GenerateFeedForUserRequest
-
+Request to generate user feed for the user.
 
 
 | Field | Type | Label | Description |
@@ -200,7 +204,7 @@
 <a name="kic.feed.GenerateFeedForUserResponse"></a>
 
 ### GenerateFeedForUserResponse
-
+Response to a request for generating feed for the user.
 
 
 | Field | Type | Label | Description |
@@ -218,7 +222,8 @@
 <a name="kic.feed.GenerateFeedError"></a>
 
 ### GenerateFeedError
-
+These are errors used to inform the client that is requesting a connection what the issue is.
+The variable names denote the issue.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
@@ -234,11 +239,11 @@
 <a name="kic.feed.Feed"></a>
 
 ### Feed
-
+Service handling generating data for user feed
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GenerateFeedForUser | [GenerateFeedForUserRequest](#kic.feed.GenerateFeedForUserRequest) | [GenerateFeedForUserResponse](#kic.feed.GenerateFeedForUserResponse) stream | The feed of posts. |
+| GenerateFeedForUser | [GenerateFeedForUserRequest](#kic.feed.GenerateFeedForUserRequest) | [GenerateFeedForUserResponse](#kic.feed.GenerateFeedForUserResponse) stream | Generate a stream of posts until either exhausted or the client requests an end. |
 
  
 
@@ -262,6 +267,37 @@ Response to a request for fetching the connection between two users.
 | ----- | ---- | ----- | ----------- |
 | error | [ConnectionError](#kic.friends.ConnectionError) |  | An error in fetching the connection. |
 | connectionStrength | [float](#float) |  | Denotes the strength of the connection between two users. |
+
+
+
+
+
+
+<a name="kic.friends.CreateConnectionForUsersRequest"></a>
+
+### CreateConnectionForUsersRequest
+Request for two users to become friends.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| firstUserID | [uint64](#uint64) |  | ID of the first user. |
+| secondUserID | [uint64](#uint64) |  | ID of the second user. |
+
+
+
+
+
+
+<a name="kic.friends.CreateConnectionForUsersResponse"></a>
+
+### CreateConnectionForUsersResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| error | [ConnectionError](#kic.friends.ConnectionError) |  | An error in creating the connection. |
 
 
 
@@ -354,6 +390,7 @@ Request to get friend recommendations for the user.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | user | [kic.common.User](#kic.common.User) |  | Inform the client of information regarding the user. |
+| numberRecommendations | [int32](#int32) |  | How many recommendations the client would like to receive. |
 
 
 
@@ -419,11 +456,12 @@ Service handling fetching and storing data about friends.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| GetFriendsForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse) |  |
-| GetConnectionBetweenUsers | [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) |  |
-| GetRecommendationsForUser | [GetRecommendationsForUserRequest](#kic.friends.GetRecommendationsForUserRequest) | [GetRecommendationsForUserResponse](#kic.friends.GetRecommendationsForUserResponse) |  |
-| UpdateConnectionBetweenUsers | [UpdateConnectionBetweenUsersRequest](#kic.friends.UpdateConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) |  |
-| DeleteConnectionBetweenUsers | [DeleteConnectionBetweenUsersRequest](#kic.friends.DeleteConnectionBetweenUsersRequest) | [DeleteConnectionBetweenUsersResponse](#kic.friends.DeleteConnectionBetweenUsersResponse) |  |
+| GetFriendsForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse) | Request a list of the IDs of all friends of a particular user. |
+| GetConnectionBetweenUsers | [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) | Request information about the connection between two users, checking for existence and strength. |
+| GetRecommendationsForUser | [GetRecommendationsForUserRequest](#kic.friends.GetRecommendationsForUserRequest) | [GetRecommendationsForUserResponse](#kic.friends.GetRecommendationsForUserResponse) | Request a list of given size of users who might be friends of the requesting user. |
+| CreateConnectionForUsers | [CreateConnectionForUsersRequest](#kic.friends.CreateConnectionForUsersRequest) | [CreateConnectionForUsersResponse](#kic.friends.CreateConnectionForUsersResponse) | Add two users as friends and create a connection between them. |
+| UpdateConnectionBetweenUsers | [UpdateConnectionBetweenUsersRequest](#kic.friends.UpdateConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) | Update a connection strength between two users. |
+| DeleteConnectionBetweenUsers | [DeleteConnectionBetweenUsersRequest](#kic.friends.DeleteConnectionBetweenUsersRequest) | [DeleteConnectionBetweenUsersResponse](#kic.friends.DeleteConnectionBetweenUsersResponse) | Delete the connection between two users. |
 
  
 
@@ -433,12 +471,9 @@ Service handling fetching and storing data about friends.
 <p align="right"><a href="#top">Top</a></p>
 
 ## proto/health.proto
-These are messages and services relating to mental health tracking data.
-Some of the data models that will be used in the end products will be supplied from
-the Envoy project, specifically those found here for external authentication
-services: https://github.com/envoyproxy/envoy/blob/main/api/envoy/service/auth/v3/external_auth.proto
-We will implement the server side logic for the service they define, allowing Istio to
-send gRPC requests to our authentication server.
+These are messages and services relating to mental health tracking data, allowing for
+the logging of user mental health data and tracking the quality of their mental health state
+from day to day.
 
 
 <a name="kic.health.AddHealthDataForUserRequest"></a>
@@ -607,18 +642,18 @@ Service handling fetching and storing mental health tracking data about users.
 <p align="right"><a href="#top">Top</a></p>
 
 ## proto/media.proto
-
+These are messages and services relating to a storing media, such as uploading and downloading files.
 
 
 <a name="kic.media.CheckForFileRequest"></a>
 
 ### CheckForFileRequest
-
+Request to check for file for user.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| fileInfo | [kic.common.File](#kic.common.File) |  |  |
+| fileInfo | [kic.common.File](#kic.common.File) |  | Information of file to be checked |
 
 
 
@@ -628,12 +663,12 @@ Service handling fetching and storing mental health tracking data about users.
 <a name="kic.media.CheckForFileResponse"></a>
 
 ### CheckForFileResponse
-
+Response to check for file for user.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| exists | [bool](#bool) |  |  |
+| exists | [bool](#bool) |  | Returns true if file is found to exist |
 
 
 
@@ -643,13 +678,13 @@ Service handling fetching and storing mental health tracking data about users.
 <a name="kic.media.DeleteFilesWithMetaDataRequest"></a>
 
 ### DeleteFilesWithMetaDataRequest
-
+Request to delete file for user with metadata request
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| metadata | [DeleteFilesWithMetaDataRequest.MetadataEntry](#kic.media.DeleteFilesWithMetaDataRequest.MetadataEntry) | repeated |  |
-| strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  |  |
+| metadata | [DeleteFilesWithMetaDataRequest.MetadataEntry](#kic.media.DeleteFilesWithMetaDataRequest.MetadataEntry) | repeated | Map of desired metadata of file to be deleted |
+| strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  | Flags sent to tell the server how seriously it wants the metadata request to be conformed to |
 
 
 
@@ -675,12 +710,12 @@ Service handling fetching and storing mental health tracking data about users.
 <a name="kic.media.DeleteFilesWithMetaDataResponse"></a>
 
 ### DeleteFilesWithMetaDataResponse
-
+Response to  delete file for user with metadata request
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| error | [DeleteFileError](#kic.media.DeleteFileError) |  |  |
+| error | [DeleteFileError](#kic.media.DeleteFileError) |  | DeleteFileError denotes if file is not able to be deleted. |
 
 
 
@@ -690,12 +725,12 @@ Service handling fetching and storing mental health tracking data about users.
 <a name="kic.media.DownloadFileRequest"></a>
 
 ### DownloadFileRequest
-
+Request to download file for user
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| fileInfo | [kic.common.File](#kic.common.File) |  |  |
+| fileInfo | [kic.common.File](#kic.common.File) |  | Information of file to be downloaded |
 
 
 
@@ -705,7 +740,7 @@ Service handling fetching and storing mental health tracking data about users.
 <a name="kic.media.DownloadFileResponse"></a>
 
 ### DownloadFileResponse
-
+Response to download file for user
 
 
 | Field | Type | Label | Description |
@@ -721,13 +756,13 @@ Service handling fetching and storing mental health tracking data about users.
 <a name="kic.media.GetFilesByMetadataRequest"></a>
 
 ### GetFilesByMetadataRequest
-
+Request to get files for user by metadata request
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| desiredMetadata | [GetFilesByMetadataRequest.DesiredMetadataEntry](#kic.media.GetFilesByMetadataRequest.DesiredMetadataEntry) | repeated |  |
-| strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  |  |
+| desiredMetadata | [GetFilesByMetadataRequest.DesiredMetadataEntry](#kic.media.GetFilesByMetadataRequest.DesiredMetadataEntry) | repeated | Map of desired metadata |
+| strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  | Flags sent with a get file by metadata request to tell the server how seriously it wants the metadata request to be conformed to |
 
 
 
@@ -753,12 +788,12 @@ Service handling fetching and storing mental health tracking data about users.
 <a name="kic.media.GetFilesByMetadataResponse"></a>
 
 ### GetFilesByMetadataResponse
-
+Response to get files for user by metadata request
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| fileInfos | [kic.common.File](#kic.common.File) | repeated |  |
+| fileInfos | [kic.common.File](#kic.common.File) | repeated | Information of file to be downloaded |
 
 
 
@@ -768,7 +803,7 @@ Service handling fetching and storing mental health tracking data about users.
 <a name="kic.media.UploadFileRequest"></a>
 
 ### UploadFileRequest
-
+Request to upload file for user.
 
 
 | Field | Type | Label | Description |
@@ -784,13 +819,13 @@ Service handling fetching and storing mental health tracking data about users.
 <a name="kic.media.UploadFileResponse"></a>
 
 ### UploadFileResponse
-
+Response to user requesting file upload.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| fileID | [string](#string) |  |  |
-| bytesRead | [uint64](#uint64) |  |  |
+| fileID | [string](#string) |  | Id of file being uploaded |
+| bytesRead | [uint64](#uint64) |  | Size of file in bytes |
 
 
 
@@ -802,23 +837,25 @@ Service handling fetching and storing mental health tracking data about users.
 <a name="kic.media.DeleteFileError"></a>
 
 ### DeleteFileError
-
+These are errors used to inform the client that is requesting a connection (deleting a file) what the issue is.
+The variable names denote the issue.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| ACCESS_DENIED | 0 |  |
+| ACCESS_DENIED | 0 | ACCESS_DENIED denotes if file is not able to be deleted due to denial of access. |
 
 
 
 <a name="kic.media.DownloadFileByNameError"></a>
 
 ### DownloadFileByNameError
-
+These are errors used to inform the client that is requesting a connection (downloading a file) what the issue is.
+The variable names denote the issue.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| FILE_NOT_FOUND | 0 |  |
-| BUCKET_NOT_FOUND | 1 |  |
+| FILE_NOT_FOUND | 0 | FILE_NOT_FOUND denotes if file is not found. |
+| BUCKET_NOT_FOUND | 1 | BUCKET_NOT_FOUND denotes if bucket is not found. |
 
 
 
@@ -844,15 +881,15 @@ to be conformed to
 <a name="kic.media.MediaStorage"></a>
 
 ### MediaStorage
-
+Service handling fetching and storing data about files.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| UploadFile | [UploadFileRequest](#kic.media.UploadFileRequest) stream | [UploadFileResponse](#kic.media.UploadFileResponse) |  |
-| DownloadFileByName | [DownloadFileRequest](#kic.media.DownloadFileRequest) | [DownloadFileResponse](#kic.media.DownloadFileResponse) stream |  |
-| CheckForFileByName | [CheckForFileRequest](#kic.media.CheckForFileRequest) | [CheckForFileResponse](#kic.media.CheckForFileResponse) |  |
-| GetFilesWithMetadata | [GetFilesByMetadataRequest](#kic.media.GetFilesByMetadataRequest) | [GetFilesByMetadataResponse](#kic.media.GetFilesByMetadataResponse) |  |
-| DeleteFilesWithMetaData | [DeleteFilesWithMetaDataRequest](#kic.media.DeleteFilesWithMetaDataRequest) | [DeleteFilesWithMetaDataResponse](#kic.media.DeleteFilesWithMetaDataResponse) |  |
+| UploadFile | [UploadFileRequest](#kic.media.UploadFileRequest) stream | [UploadFileResponse](#kic.media.UploadFileResponse) | Send a file as a stream of messages, starting with a message containing a File message, then followed by an arbitrary number of messages containing bytes representing the file. The response will then confirm the number of bytes received or provide an error. |
+| DownloadFileByName | [DownloadFileRequest](#kic.media.DownloadFileRequest) | [DownloadFileResponse](#kic.media.DownloadFileResponse) stream | Using the same format as above, the service allows the client to retrieve a stored file. |
+| CheckForFileByName | [CheckForFileRequest](#kic.media.CheckForFileRequest) | [CheckForFileResponse](#kic.media.CheckForFileResponse) | Check for the existence of a file by filename |
+| GetFilesWithMetadata | [GetFilesByMetadataRequest](#kic.media.GetFilesByMetadataRequest) | [GetFilesByMetadataResponse](#kic.media.GetFilesByMetadataResponse) | Allows for the requesting of files with specific key value pairs as metadata. The strictness can be set such that for example only perfect matches will be returned. |
+| DeleteFilesWithMetaData | [DeleteFilesWithMetaDataRequest](#kic.media.DeleteFilesWithMetaDataRequest) | [DeleteFilesWithMetaDataResponse](#kic.media.DeleteFilesWithMetaDataResponse) | Using the same strictness settings as the above, delete particular files with certain metadata. |
 
  
 

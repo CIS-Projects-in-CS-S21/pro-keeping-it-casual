@@ -140,12 +140,29 @@ message DeleteFilesWithMetaDataResponse {
 Service handling fetching and storing data about files.
 */
 service MediaStorage {
+  /*
+   Send a file as a stream of messages, starting with a message containing a File message, then
+   followed by an arbitrary number of messages containing bytes representing the file. The response
+   will then confirm the number of bytes received or provide an error.
+   */
   rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
+
+  /*
+  Using the same format as above, the service allows the client to retrieve a stored file.
+   */
   rpc DownloadFileByName(DownloadFileRequest) returns (stream DownloadFileResponse);
 
+  // Check for the existence of a file by filename
   rpc CheckForFileByName(CheckForFileRequest) returns (CheckForFileResponse);
 
+  /*
+  Allows for the requesting of files with specific key value pairs as metadata. The strictness can be set
+  such that for example only perfect matches will be returned.
+   */
   rpc GetFilesWithMetadata(GetFilesByMetadataRequest) returns (GetFilesByMetadataResponse);
 
+  /*
+  Using the same strictness settings as the above, delete particular files with certain metadata.
+   */
   rpc DeleteFilesWithMetaData(DeleteFilesWithMetaDataRequest) returns (DeleteFilesWithMetaDataResponse);
 }

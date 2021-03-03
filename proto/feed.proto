@@ -45,6 +45,6 @@ message GenerateFeedForUserResponse {
 Service handling generating data for user feed
 */
 service Feed {
-  // The feed of posts.
+  // Generate a stream of posts until either exhausted or the client requests an end.
   rpc GenerateFeedForUser(GenerateFeedForUserRequest) returns (stream GenerateFeedForUserResponse);
 }
