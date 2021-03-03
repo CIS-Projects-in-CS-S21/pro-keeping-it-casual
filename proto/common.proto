@@ -1,7 +1,6 @@
-/*
-These are messages used commonly throughout the rest of the proto files within the project.
- */
-
+/**
+ * These are messages used commonly throughout the rest of the proto files within the project.
+*/
 syntax = "proto3";
 
 package kic.common;

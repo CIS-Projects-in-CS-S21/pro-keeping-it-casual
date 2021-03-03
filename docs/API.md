@@ -98,7 +98,7 @@
 <p align="right"><a href="#top">Top</a></p>
 
 ## proto/common.proto
-
+These are messages used commonly throughout the rest of the proto files within the project.
 
 
 <a name="kic.common.Date"></a>
