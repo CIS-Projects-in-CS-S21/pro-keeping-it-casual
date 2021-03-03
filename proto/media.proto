@@ -42,25 +42,39 @@ message DownloadFileResponse {
   };
 }
 
+// Flags sent with a get file by metadata request to tell the server how seriously it wants the metadata request
+// to be conformed to
+enum MetadataStrictness {
+  // Only include a given file if all key value pairs match
+  STRICT = 0;
+  // Include a file if it matches any of the key value pairs
+  CASUAL = 1;
+  // Only include a file if it fails to match all key value pairs
+  STRICTLY_OPPOSITE = 2;
+  // Only include a file if it matches less than all key value pairs
+  CASUALLY_OPPOSITE = 3;
+}
+
 message GetFilesByMetadataRequest {
-  // Flags sent with a get file by metadata request to tell the server how seriously it wants the metadata request
-  // to be conformed to
-  enum MetadataStrictness {
-    // Only include a given file if all key value pairs match
-    STRICT = 0;
-    // Include a file if it matches any of the key value pairs
-    CASUAL = 1;
-    // Only include a file if it fails to match all key value pairs
-    STRICTLY_OPPOSITE = 2;
-    // Only include a file if it matches less than all key value pairs
-    CASUALLY_OPPOSITE = 3;
-  }
   map<string, string> desiredMetadata = 1;
   MetadataStrictness strictness = 2;
 }
 
 message GetFilesByMetadataResponse {
   repeated kic.common.File fileInfos = 1;
+}
+
+enum DeleteFileError {
+  ACCESS_DENIED = 0;
+}
+
+message DeleteFilesWithMetaDataRequest {
+  map<string, string> metadata = 1;
+  MetadataStrictness strictness = 2;
+}
+
+message DeleteFilesWithMetaDataResponse {
+    DeleteFileError error = 1;
 }
 
 service MediaStorage {
@@ -70,4 +84,6 @@ service MediaStorage {
   rpc CheckForFileByName(CheckForFileRequest) returns (CheckForFileResponse);
 
   rpc GetFilesWithMetadata(GetFilesByMetadataRequest) returns (GetFilesByMetadataResponse);
+
+  rpc DeleteFilesWithMetaData(DeleteFilesWithMetaDataRequest) returns (DeleteFilesWithMetaDataResponse);
 }

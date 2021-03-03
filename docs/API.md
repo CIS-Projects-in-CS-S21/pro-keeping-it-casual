@@ -49,6 +49,9 @@
 - [proto/media.proto](#proto/media.proto)
     - [CheckForFileRequest](#kic.media.CheckForFileRequest)
     - [CheckForFileResponse](#kic.media.CheckForFileResponse)
+    - [DeleteFilesWithMetaDataRequest](#kic.media.DeleteFilesWithMetaDataRequest)
+    - [DeleteFilesWithMetaDataRequest.MetadataEntry](#kic.media.DeleteFilesWithMetaDataRequest.MetadataEntry)
+    - [DeleteFilesWithMetaDataResponse](#kic.media.DeleteFilesWithMetaDataResponse)
     - [DownloadFileRequest](#kic.media.DownloadFileRequest)
     - [DownloadFileResponse](#kic.media.DownloadFileResponse)
     - [GetFilesByMetadataRequest](#kic.media.GetFilesByMetadataRequest)
@@ -57,8 +60,9 @@
     - [UploadFileRequest](#kic.media.UploadFileRequest)
     - [UploadFileResponse](#kic.media.UploadFileResponse)
   
+    - [DeleteFileError](#kic.media.DeleteFileError)
     - [DownloadFileByNameError](#kic.media.DownloadFileByNameError)
-    - [GetFilesByMetadataRequest.MetadataStrictness](#kic.media.GetFilesByMetadataRequest.MetadataStrictness)
+    - [MetadataStrictness](#kic.media.MetadataStrictness)
   
     - [MediaStorage](#kic.media.MediaStorage)
   
@@ -67,6 +71,8 @@
     - [AddUserResponse](#kic.users.AddUserResponse)
     - [DeleteUserByIDRequest](#kic.users.DeleteUserByIDRequest)
     - [DeleteUserByIDResponse](#kic.users.DeleteUserByIDResponse)
+    - [GetJWTTokenRequest](#kic.users.GetJWTTokenRequest)
+    - [GetJWTTokenResponse](#kic.users.GetJWTTokenResponse)
     - [GetUserByIDRequest](#kic.users.GetUserByIDRequest)
     - [GetUserByIDResponse](#kic.users.GetUserByIDResponse)
     - [GetUserByUsernameRequest](#kic.users.GetUserByUsernameRequest)
@@ -77,6 +83,8 @@
     - [UpdateUserInfoResponse](#kic.users.UpdateUserInfoResponse)
   
     - [AddUserError](#kic.users.AddUserError)
+    - [GetJWTTokenResponse.JWTError](#kic.users.GetJWTTokenResponse.JWTError)
+    - [GetUserError](#kic.users.GetUserError)
   
     - [Users](#kic.users.Users)
   
@@ -632,6 +640,53 @@ Service handling fetching and storing mental health tracking data about users.
 
 
 
+<a name="kic.media.DeleteFilesWithMetaDataRequest"></a>
+
+### DeleteFilesWithMetaDataRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| metadata | [DeleteFilesWithMetaDataRequest.MetadataEntry](#kic.media.DeleteFilesWithMetaDataRequest.MetadataEntry) | repeated |  |
+| strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  |  |
+
+
+
+
+
+
+<a name="kic.media.DeleteFilesWithMetaDataRequest.MetadataEntry"></a>
+
+### DeleteFilesWithMetaDataRequest.MetadataEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="kic.media.DeleteFilesWithMetaDataResponse"></a>
+
+### DeleteFilesWithMetaDataResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| error | [DeleteFileError](#kic.media.DeleteFileError) |  |  |
+
+
+
+
+
+
 <a name="kic.media.DownloadFileRequest"></a>
 
 ### DownloadFileRequest
@@ -672,7 +727,7 @@ Service handling fetching and storing mental health tracking data about users.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | desiredMetadata | [GetFilesByMetadataRequest.DesiredMetadataEntry](#kic.media.GetFilesByMetadataRequest.DesiredMetadataEntry) | repeated |  |
-| strictness | [GetFilesByMetadataRequest.MetadataStrictness](#kic.media.GetFilesByMetadataRequest.MetadataStrictness) |  |  |
+| strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  |  |
 
 
 
@@ -744,6 +799,17 @@ Service handling fetching and storing mental health tracking data about users.
  
 
 
+<a name="kic.media.DeleteFileError"></a>
+
+### DeleteFileError
+
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| ACCESS_DENIED | 0 |  |
+
+
+
 <a name="kic.media.DownloadFileByNameError"></a>
 
 ### DownloadFileByNameError
@@ -756,9 +822,9 @@ Service handling fetching and storing mental health tracking data about users.
 
 
 
-<a name="kic.media.GetFilesByMetadataRequest.MetadataStrictness"></a>
+<a name="kic.media.MetadataStrictness"></a>
 
-### GetFilesByMetadataRequest.MetadataStrictness
+### MetadataStrictness
 Flags sent with a get file by metadata request to tell the server how seriously it wants the metadata request
 to be conformed to
 
@@ -786,6 +852,7 @@ to be conformed to
 | DownloadFileByName | [DownloadFileRequest](#kic.media.DownloadFileRequest) | [DownloadFileResponse](#kic.media.DownloadFileResponse) stream |  |
 | CheckForFileByName | [CheckForFileRequest](#kic.media.CheckForFileRequest) | [CheckForFileResponse](#kic.media.CheckForFileResponse) |  |
 | GetFilesWithMetadata | [GetFilesByMetadataRequest](#kic.media.GetFilesByMetadataRequest) | [GetFilesByMetadataResponse](#kic.media.GetFilesByMetadataResponse) |  |
+| DeleteFilesWithMetaData | [DeleteFilesWithMetaDataRequest](#kic.media.DeleteFilesWithMetaDataRequest) | [DeleteFilesWithMetaDataResponse](#kic.media.DeleteFilesWithMetaDataResponse) |  |
 
  
 
@@ -842,7 +909,12 @@ Response to a request for adding a user to the database.
 <a name="kic.users.DeleteUserByIDRequest"></a>
 
 ### DeleteUserByIDRequest
+Request to delete a user with a given user id
 
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| userID | [int64](#int64) |  | user id sent in request |
 
 
 
@@ -852,7 +924,45 @@ Response to a request for adding a user to the database.
 <a name="kic.users.DeleteUserByIDResponse"></a>
 
 ### DeleteUserByIDResponse
+Response to a request to delete a user with a given user id
 
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| success | [bool](#bool) |  | Denotes if the user was successfully deleted. |
+| deletedUser | [kic.common.User](#kic.common.User) |  | Inform the client of the information assigned to the user should they be accepted. |
+
+
+
+
+
+
+<a name="kic.users.GetJWTTokenRequest"></a>
+
+### GetJWTTokenRequest
+A Request to the server to return a JWT token to authenticate the remainder of the session with the given user.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| username | [string](#string) |  | Requesting user&#39;s username |
+| password | [string](#string) |  | Requesting user&#39;s password |
+
+
+
+
+
+
+<a name="kic.users.GetJWTTokenResponse"></a>
+
+### GetJWTTokenResponse
+The server response to a client request for a JWT, either providing the token or an error response.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| token | [string](#string) |  | Return the token as a string should the client send proper credentials |
+| error | [GetJWTTokenResponse.JWTError](#kic.users.GetJWTTokenResponse.JWTError) |  | Tell the client the issue with the request should one exist |
 
 
 
@@ -862,7 +972,12 @@ Response to a request for adding a user to the database.
 <a name="kic.users.GetUserByIDRequest"></a>
 
 ### GetUserByIDRequest
+Request for obtaining userdata from id
 
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| userID | [int64](#int64) |  |  |
 
 
 
@@ -872,7 +987,14 @@ Response to a request for adding a user to the database.
 <a name="kic.users.GetUserByIDResponse"></a>
 
 ### GetUserByIDResponse
+Response to a request for obtaining user data from user id
 
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| success | [bool](#bool) |  | denotes if the user was successfully found |
+| user | [kic.common.User](#kic.common.User) |  | User returned in response |
+| errors | [GetUserError](#kic.users.GetUserError) | repeated | Array of errors for getting user by username |
 
 
 
@@ -882,12 +1004,12 @@ Response to a request for adding a user to the database.
 <a name="kic.users.GetUserByUsernameRequest"></a>
 
 ### GetUserByUsernameRequest
-
+Request for obtaining user data from username
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| username | [string](#string) |  |  |
+| username | [string](#string) |  | username sent in request |
 
 
 
@@ -897,7 +1019,14 @@ Response to a request for adding a user to the database.
 <a name="kic.users.GetUserByUsernameResponse"></a>
 
 ### GetUserByUsernameResponse
+Response to a request for obtaining user data from a username
 
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| success | [bool](#bool) |  | denotes if the user was successfully found |
+| user | [kic.common.User](#kic.common.User) |  | User returned in response |
+| errors | [GetUserError](#kic.users.GetUserError) | repeated | Array of errors for getting user by username |
 
 
 
@@ -907,7 +1036,12 @@ Response to a request for adding a user to the database.
 <a name="kic.users.GetUserNameByIDRequest"></a>
 
 ### GetUserNameByIDRequest
+Request for obtaining username from user id
 
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| userID | [int64](#int64) |  | user id sent in request |
 
 
 
@@ -917,7 +1051,12 @@ Response to a request for adding a user to the database.
 <a name="kic.users.GetUserNameByIDResponse"></a>
 
 ### GetUserNameByIDResponse
+Response to a request for obtaining username from user id
 
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| username | [string](#string) |  | username associated with the given user id |
 
 
 
@@ -927,7 +1066,7 @@ Response to a request for adding a user to the database.
 <a name="kic.users.UpdateUserInfoRequest"></a>
 
 ### UpdateUserInfoRequest
-
+Request to update a user&#39;s information with the information provided
 
 
 | Field | Type | Label | Description |
@@ -942,7 +1081,7 @@ Response to a request for adding a user to the database.
 <a name="kic.users.UpdateUserInfoResponse"></a>
 
 ### UpdateUserInfoResponse
-
+Response to a request to update a user&#39;s information with the information provided
 
 
 | Field | Type | Label | Description |
@@ -972,6 +1111,31 @@ The variable names denote the issue.
 | BIRTHDAY_MALFORMED | 3 | The sent date was not in the proper format. |
 
 
+
+<a name="kic.users.GetJWTTokenResponse.JWTError"></a>
+
+### GetJWTTokenResponse.JWTError
+Errors with the request that the client will need to fix
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| INVALID_PASSWORD | 0 | Incorrect password sent |
+| INVALID_USERNAME | 1 | Incorrect username sent |
+
+
+
+<a name="kic.users.GetUserError"></a>
+
+### GetUserError
+These are errors used to inform the client requesting a user what the issue is.
+The variable names denote the issue.
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| INVALID_USERNAME | 0 | The given username does not match any records |
+| INVALID_ID | 1 | User ID does not exist |
+
+
  
 
  
@@ -984,12 +1148,13 @@ Service handling fetching and storing data about users.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| AddUser | [AddUserRequest](#kic.users.AddUserRequest) | [AddUserResponse](#kic.users.AddUserResponse) |  |
-| GetUserByUsername | [GetUserByUsernameRequest](#kic.users.GetUserByUsernameRequest) | [GetUserByUsernameResponse](#kic.users.GetUserByUsernameResponse) |  |
-| GetUserByID | [GetUserByIDRequest](#kic.users.GetUserByIDRequest) | [GetUserByIDResponse](#kic.users.GetUserByIDResponse) |  |
-| GetUserNameByID | [GetUserNameByIDRequest](#kic.users.GetUserNameByIDRequest) | [GetUserNameByIDResponse](#kic.users.GetUserNameByIDResponse) |  |
-| DeleteUserByID | [DeleteUserByIDRequest](#kic.users.DeleteUserByIDRequest) | [DeleteUserByIDResponse](#kic.users.DeleteUserByIDResponse) |  |
-| UpdateUserInfo | [UpdateUserInfoRequest](#kic.users.UpdateUserInfoRequest) | [UpdateUserInfoResponse](#kic.users.UpdateUserInfoResponse) |  |
+| GetJWTToken | [GetJWTTokenRequest](#kic.users.GetJWTTokenRequest) | [GetJWTTokenResponse](#kic.users.GetJWTTokenResponse) | Authenticate the client session and return a JWT that can be utilized for all further contact requiring authentication |
+| AddUser | [AddUserRequest](#kic.users.AddUserRequest) | [AddUserResponse](#kic.users.AddUserResponse) | Add a new user to the database. |
+| GetUserByUsername | [GetUserByUsernameRequest](#kic.users.GetUserByUsernameRequest) | [GetUserByUsernameResponse](#kic.users.GetUserByUsernameResponse) | Request user information from a username. |
+| GetUserByID | [GetUserByIDRequest](#kic.users.GetUserByIDRequest) | [GetUserByIDResponse](#kic.users.GetUserByIDResponse) | Request user information from a User ID. |
+| GetUserNameByID | [GetUserNameByIDRequest](#kic.users.GetUserNameByIDRequest) | [GetUserNameByIDResponse](#kic.users.GetUserNameByIDResponse) | Request only a username from a User ID. |
+| DeleteUserByID | [DeleteUserByIDRequest](#kic.users.DeleteUserByIDRequest) | [DeleteUserByIDResponse](#kic.users.DeleteUserByIDResponse) | Delete the user with the given ID, this will need to cascade to other services. |
+| UpdateUserInfo | [UpdateUserInfoRequest](#kic.users.UpdateUserInfoRequest) | [UpdateUserInfoResponse](#kic.users.UpdateUserInfoResponse) | Update a user&#39;s information to that sent by the client. |
 
  
 

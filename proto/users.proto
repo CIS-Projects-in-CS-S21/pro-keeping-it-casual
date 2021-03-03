@@ -31,15 +31,14 @@ enum AddUserError {
 }
 
 /*
-These are errors used to inform the client requesting a user by username what the issue is.
+These are errors used to inform the client requesting a user what the issue is.
 The variable names denote the issue.
 */
 enum GetUserError {
   // The given username does not match any records
   INVALID_USERNAME = 0;
-  // Unable to connect to the database of users
-  BAD_CONNECTION = 1;
-
+  // User ID does not exist
+  INVALID_ID = 1;
 }
 
 
@@ -140,8 +139,6 @@ message DeleteUserByIDResponse {
   bool success = 1;
   // Inform the client of the information assigned to the user should they be accepted.
   kic.common.User deletedUser = 2;
-  // Array of errors which need to be fixed by the client.
-  repeated GetUserError errors = 3;
 }
 
 /*
@@ -166,16 +163,53 @@ message UpdateUserInfoResponse {
 }
 
 /*
+A Request to the server to return a JWT token to authenticate the remainder of the session with the given user.
+*/
+message GetJWTTokenRequest {
+  // Requesting user's username
+  string username = 1;
+  // Requesting user's password
+  string password = 2;
+}
+
+/*
+The server response to a client request for a JWT, either providing the token or an error response.
+*/
+message GetJWTTokenResponse {
+  // Return the token as a string should the client send proper credentials
+  string token = 1;
+  // Errors with the request that the client will need to fix
+  enum JWTError {
+    // Incorrect password sent
+    INVALID_PASSWORD = 0;
+    // Incorrect username sent
+    INVALID_USERNAME = 1;
+  }
+  // Tell the client the issue with the request should one exist
+  JWTError error = 2;
+}
+
+/*
 Service handling fetching and storing data about users.
 */
 service Users {
+  // Authenticate the client session and return a JWT that can be utilized for all further contact requiring
+  // authentication
+  rpc GetJWTToken(GetJWTTokenRequest) returns (GetJWTTokenResponse) ;
+
+  // Add a new user to the database.
   rpc AddUser(AddUserRequest) returns (AddUserResponse);
 
+  // Request user information from a username.
   rpc GetUserByUsername(GetUserByUsernameRequest) returns (GetUserByUsernameResponse);
+  // Request user information from a User ID.
   rpc GetUserByID(GetUserByIDRequest) returns (GetUserByIDResponse);
+  // Request only a username from a User ID.
   rpc GetUserNameByID(GetUserNameByIDRequest) returns (GetUserNameByIDResponse);
 
+  // Delete the user with the given ID, this will need to cascade to other services.
   rpc DeleteUserByID(DeleteUserByIDRequest) returns (DeleteUserByIDResponse);
 
+  // Update a user's information to that sent by the client.
   rpc UpdateUserInfo(UpdateUserInfoRequest) returns (UpdateUserInfoResponse);
 }
