@@ -1,3 +1,6 @@
+/**
+ * These are messages and services relating to a storing media, such as uploading and downloading files.
+*/
 syntax = "proto3";
 
 package kic.media;
@@ -6,36 +9,67 @@ option go_package = "./proto/media;proto";
 
 import "proto/common.proto";
 
+/*
+Request to upload file for user.
+ */
 message UploadFileRequest {
+ //Either upload File together or in bytes
   oneof data {
     kic.common.File fileInfo = 1;
     bytes chunk = 2;
   };
 }
 
+/*
+Response to user requesting file upload.
+ */
 message UploadFileResponse {
+  //Id of file being uploaded
   string fileID = 1;
+  //Size of file in bytes
   uint64 bytesRead = 2;
 }
 
+/*
+Request to check for file for user.
+ */
 message CheckForFileRequest {
+   //Information of file to be checked
   kic.common.File fileInfo = 1;
 }
 
+/*
+Response to check for file for user.
+ */
 message CheckForFileResponse {
+  //Returns true if file is found to exist
   bool exists = 1;
 }
 
+/*
+These are errors used to inform the client that is requesting a connection (downloading a file) what the issue is.
+The variable names denote the issue.
+*/
 enum DownloadFileByNameError {
+  //FILE_NOT_FOUND denotes if file is not found.
   FILE_NOT_FOUND = 0;
+  //BUCKET_NOT_FOUND denotes if bucket is not found.
   BUCKET_NOT_FOUND = 1;
 }
 
+/*
+Request to download file for user
+ */
 message DownloadFileRequest {
+//Information of file to be downloaded
   kic.common.File fileInfo = 1;
 }
 
+/*
+Response to download file for user
+ */
 message DownloadFileResponse {
+   //either the file can be downloaded in bytes or there is an error
   oneof data {
     DownloadFileByNameError error = 1;
     bytes chunk = 2;
@@ -55,28 +89,56 @@ enum MetadataStrictness {
   CASUALLY_OPPOSITE = 3;
 }
 
+/*
+Request to get files for user by metadata request
+ */
 message GetFilesByMetadataRequest {
+  //Map of desired metadata
   map<string, string> desiredMetadata = 1;
+  // Flags sent with a get file by metadata request to tell the server how seriously it wants the metadata request
+  // to be conformed to
   MetadataStrictness strictness = 2;
 }
 
+/*
+Response to get files for user by metadata request
+ */
 message GetFilesByMetadataResponse {
+  //Information of file to be downloaded
   repeated kic.common.File fileInfos = 1;
 }
 
+/*
+These are errors used to inform the client that is requesting a connection (deleting a file) what the issue is.
+The variable names denote the issue.
+*/
 enum DeleteFileError {
+  //ACCESS_DENIED denotes if file is not able to be deleted due to denial of access.
   ACCESS_DENIED = 0;
 }
 
+/*
+Request to delete file for user with metadata request
+ */
 message DeleteFilesWithMetaDataRequest {
+  //Map of desired metadata of file to be deleted
   map<string, string> metadata = 1;
+  // Flags sent to tell the server how seriously it wants the metadata request
+  // to be conformed to
   MetadataStrictness strictness = 2;
 }
 
+/*
+Response to  delete file for user with metadata request
+ */
 message DeleteFilesWithMetaDataResponse {
+    //DeleteFileError denotes if file is not able to be deleted.
     DeleteFileError error = 1;
 }
 
+/*
+Service handling fetching and storing data about files.
+*/
 service MediaStorage {
   rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
   rpc DownloadFileByName(DownloadFileRequest) returns (stream DownloadFileResponse);
