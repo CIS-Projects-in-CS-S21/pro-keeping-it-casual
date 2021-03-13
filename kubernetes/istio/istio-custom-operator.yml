@@ -7,8 +7,12 @@ spec:
     extensionProviders:
     - name: "ext-authz-grpc"
       envoyExtAuthzGrpc:
-        service: "auth.kic.svc.cluster.local"
-        port: "9000"
+        service: "kic-users-service.kic.svc.cluster.local"
+        port: "50051"
+    - name: "test-ext-authz-grpc"
+      envoyExtAuthzGrpc:
+        service: "test-kic-users-service.kic.svc.cluster.local"
+        port: "50051"
   # This is http leaving it in for now but we are using grpc so I doubt it will be of use
   # this reference is from the istio documentation
   #- name: "sample-ext-authz-http"
