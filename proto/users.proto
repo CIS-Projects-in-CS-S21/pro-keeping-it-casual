@@ -111,7 +111,14 @@ Request to update a user's information with the information provided
 message UpdateUserInfoRequest {
   // Only required item is the User id which is used to identify what entry to update,
   // all other non null fields will be used to update the proper column in the database
-  kic.common.User desiredInfo = 1;
+  int64 userID = 1;
+  string email = 2;
+  string desiredUsername = 3;
+  string desiredPassword = 4;
+  // User's birthday in MM/DD/YYYY format.
+  kic.common.Date birthday = 5;
+  // User's city location.
+  string city = 6;
 }
 
 /*
