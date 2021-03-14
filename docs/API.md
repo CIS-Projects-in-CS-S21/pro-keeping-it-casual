@@ -13,8 +13,6 @@
     - [GenerateFeedForUserRequest](#kic.feed.GenerateFeedForUserRequest)
     - [GenerateFeedForUserResponse](#kic.feed.GenerateFeedForUserResponse)
   
-    - [GenerateFeedError](#kic.feed.GenerateFeedError)
-  
     - [Feed](#kic.feed.Feed)
   
 - [proto/friends.proto](#proto/friends.proto)
@@ -30,12 +28,11 @@
     - [GetRecommendationsForUserResponse](#kic.friends.GetRecommendationsForUserResponse)
     - [UpdateConnectionBetweenUsersRequest](#kic.friends.UpdateConnectionBetweenUsersRequest)
   
-    - [ConnectionError](#kic.friends.ConnectionError)
-  
     - [Friends](#kic.friends.Friends)
   
 - [proto/health.proto](#proto/health.proto)
     - [AddHealthDataForUserRequest](#kic.health.AddHealthDataForUserRequest)
+    - [AddHealthDataForUserResponse](#kic.health.AddHealthDataForUserResponse)
     - [DeleteHealthDataForUserRequest](#kic.health.DeleteHealthDataForUserRequest)
     - [DeleteHealthDataForUserResponse](#kic.health.DeleteHealthDataForUserResponse)
     - [GetHealthDataForUserRequest](#kic.health.GetHealthDataForUserRequest)
@@ -43,12 +40,15 @@
     - [HealthDataErrorResponse](#kic.health.HealthDataErrorResponse)
     - [MentalHealthLog](#kic.health.MentalHealthLog)
     - [UpdateHealthDataForDateRequest](#kic.health.UpdateHealthDataForDateRequest)
+    - [UpdateHealthDataForDateResponse](#kic.health.UpdateHealthDataForDateResponse)
   
     - [HealthDataError](#kic.health.HealthDataError)
   
     - [HealthTracking](#kic.health.HealthTracking)
   
 - [proto/media.proto](#proto/media.proto)
+    - [AddCommentToFileRequest](#kic.media.AddCommentToFileRequest)
+    - [AddCommentToFileResponse](#kic.media.AddCommentToFileResponse)
     - [CheckForFileRequest](#kic.media.CheckForFileRequest)
     - [CheckForFileResponse](#kic.media.CheckForFileResponse)
     - [DeleteFilesWithMetaDataRequest](#kic.media.DeleteFilesWithMetaDataRequest)
@@ -59,10 +59,12 @@
     - [GetFilesByMetadataRequest](#kic.media.GetFilesByMetadataRequest)
     - [GetFilesByMetadataRequest.DesiredMetadataEntry](#kic.media.GetFilesByMetadataRequest.DesiredMetadataEntry)
     - [GetFilesByMetadataResponse](#kic.media.GetFilesByMetadataResponse)
+    - [UpdateFilesWithMetadataRequest](#kic.media.UpdateFilesWithMetadataRequest)
+    - [UpdateFilesWithMetadataRequest.MetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.MetadataEntry)
+    - [UpdateFilesWithMetadataResponse](#kic.media.UpdateFilesWithMetadataResponse)
     - [UploadFileRequest](#kic.media.UploadFileRequest)
     - [UploadFileResponse](#kic.media.UploadFileResponse)
   
-    - [DeleteFileError](#kic.media.DeleteFileError)
     - [DownloadFileByNameError](#kic.media.DownloadFileByNameError)
     - [MetadataStrictness](#kic.media.MetadataStrictness)
   
@@ -83,10 +85,6 @@
     - [GetUserNameByIDResponse](#kic.users.GetUserNameByIDResponse)
     - [UpdateUserInfoRequest](#kic.users.UpdateUserInfoRequest)
     - [UpdateUserInfoResponse](#kic.users.UpdateUserInfoResponse)
-  
-    - [AddUserError](#kic.users.AddUserError)
-    - [GetJWTTokenResponse.JWTError](#kic.users.GetJWTTokenResponse.JWTError)
-    - [GetUserError](#kic.users.GetUserError)
   
     - [Users](#kic.users.Users)
   
@@ -131,6 +129,7 @@ user.
 | fileName | [string](#string) |  | Simply the file name with an extension |
 | fileLocation | [string](#string) |  | This is a client specific file location, for example a google cloud bucket name |
 | metadata | [File.MetadataEntry](#kic.common.File.MetadataEntry) | repeated | Allows for arbitrary key/value metadata which can be client specific |
+| dateStored | [Date](#kic.common.Date) |  |  |
 
 
 
@@ -210,26 +209,12 @@ Response to a request for generating feed for the user.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | fileInfo | [kic.common.File](#kic.common.File) |  | The file being pulled, consisting of the file name, file location, and metadata. |
-| error | [GenerateFeedError](#kic.feed.GenerateFeedError) |  | The error occurring when the feed is generated. |
 
 
 
 
 
  
-
-
-<a name="kic.feed.GenerateFeedError"></a>
-
-### GenerateFeedError
-These are errors used to inform the client that is requesting a connection what the issue is.
-The variable names denote the issue.
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| USER_NOT_FOUND | 0 | The constant representing when a user is not found. |
-| OUT_OF_POSTS | 1 | The constant representing when the feed has no more posts to show a user. |
-
 
  
 
@@ -265,7 +250,6 @@ Response to a request for fetching the connection between two users.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| error | [ConnectionError](#kic.friends.ConnectionError) |  | An error in fetching the connection. |
 | connectionStrength | [float](#float) |  | Denotes the strength of the connection between two users. |
 
 
@@ -297,7 +281,7 @@ Request for two users to become friends.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| error | [ConnectionError](#kic.friends.ConnectionError) |  | An error in creating the connection. |
+| success | [bool](#bool) |  |  |
 
 
 
@@ -324,11 +308,6 @@ Request for a connection between two users to be deleted.
 
 ### DeleteConnectionBetweenUsersResponse
 Response to a request for deleting a connection between two users.
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| error | [ConnectionError](#kic.friends.ConnectionError) |  | An error in deleting the connection. |
 
 
 
@@ -430,20 +409,6 @@ Update the connection between two users by modifying the connection value.
 
  
 
-
-<a name="kic.friends.ConnectionError"></a>
-
-### ConnectionError
-These are errors used to inform the client that is requesting a connection what the issue is.
-The variable names denote the issue.
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| NO_FRIENDSHIP | 0 | Two users are not friends. |
-| USER_ONE_DNE | 1 | The first user does not exist. |
-| USER_TWO_DNE | 2 | The second user does not exist. |
-
-
  
 
  
@@ -486,6 +451,21 @@ Request from a user to add their mental health data to MentalHealthLog.
 | ----- | ---- | ----- | ----------- |
 | userID | [int64](#int64) |  | The ID of the user in the user database, used globally for identification. |
 | newEntry | [MentalHealthLog](#kic.health.MentalHealthLog) |  | newEntry denotes the ID of the new entry that is requested to be made. |
+
+
+
+
+
+
+<a name="kic.health.AddHealthDataForUserResponse"></a>
+
+### AddHealthDataForUserResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| success | [bool](#bool) |  |  |
 
 
 
@@ -548,7 +528,6 @@ Response to a user when user asks for health data.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| error | [HealthDataError](#kic.health.HealthDataError) |  | Error denotes if error occurred when obtaining health data and what the error was. |
 | healthData | [MentalHealthLog](#kic.health.MentalHealthLog) | repeated | healthData denotes the data that was requested by user from mental health log |
 
 
@@ -602,6 +581,21 @@ Request from a user to update their mental health tracking data for a particular
 
 
 
+
+<a name="kic.health.UpdateHealthDataForDateResponse"></a>
+
+### UpdateHealthDataForDateResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| success | [bool](#bool) |  |  |
+
+
+
+
+
  
 
 
@@ -630,9 +624,9 @@ Service handling fetching and storing mental health tracking data about users.
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | GetHealthDataForUser | [GetHealthDataForUserRequest](#kic.health.GetHealthDataForUserRequest) | [GetHealthDataForUserResponse](#kic.health.GetHealthDataForUserResponse) | Given health data obtained upon user request, said health data is returned to user. |
-| AddHealthDataForUser | [AddHealthDataForUserRequest](#kic.health.AddHealthDataForUserRequest) | [HealthDataErrorResponse](#kic.health.HealthDataErrorResponse) | Health data requested to be added by user is added, and error is returned if appropriate. |
+| AddHealthDataForUser | [AddHealthDataForUserRequest](#kic.health.AddHealthDataForUserRequest) | [AddHealthDataForUserResponse](#kic.health.AddHealthDataForUserResponse) | Health data requested to be added by user is added, and error is returned if appropriate. |
 | DeleteHealthDataForUser | [DeleteHealthDataForUserRequest](#kic.health.DeleteHealthDataForUserRequest) | [DeleteHealthDataForUserResponse](#kic.health.DeleteHealthDataForUserResponse) | Health data requested by user to be deleted is deleted and said deleted entries are returned to user. |
-| UpdateHealthDataForDate | [UpdateHealthDataForDateRequest](#kic.health.UpdateHealthDataForDateRequest) | [HealthDataErrorResponse](#kic.health.HealthDataErrorResponse) | Health data requested to be updated by user is updated, and error is returned if appropriate. |
+| UpdateHealthDataForDate | [UpdateHealthDataForDateRequest](#kic.health.UpdateHealthDataForDateRequest) | [UpdateHealthDataForDateResponse](#kic.health.UpdateHealthDataForDateResponse) | Health data requested to be updated by user is updated, and error is returned if appropriate. |
 
  
 
@@ -643,6 +637,37 @@ Service handling fetching and storing mental health tracking data about users.
 
 ## proto/media.proto
 These are messages and services relating to a storing media, such as uploading and downloading files.
+
+
+<a name="kic.media.AddCommentToFileRequest"></a>
+
+### AddCommentToFileRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| commenterUsername | [string](#string) |  |  |
+| comment | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="kic.media.AddCommentToFileResponse"></a>
+
+### AddCommentToFileResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| success | [bool](#bool) |  |  |
+
+
+
+
 
 
 <a name="kic.media.CheckForFileRequest"></a>
@@ -715,7 +740,7 @@ Response to  delete file for user with metadata request
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| error | [DeleteFileError](#kic.media.DeleteFileError) |  | DeleteFileError denotes if file is not able to be deleted. |
+| success | [bool](#bool) |  |  |
 
 
 
@@ -800,6 +825,53 @@ Response to get files for user by metadata request
 
 
 
+<a name="kic.media.UpdateFilesWithMetadataRequest"></a>
+
+### UpdateFilesWithMetadataRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| metadata | [UpdateFilesWithMetadataRequest.MetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.MetadataEntry) | repeated | Map of desired metadata of file to be deleted |
+| strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  | Flags sent to tell the server how seriously it wants the metadata request to be conformed to |
+
+
+
+
+
+
+<a name="kic.media.UpdateFilesWithMetadataRequest.MetadataEntry"></a>
+
+### UpdateFilesWithMetadataRequest.MetadataEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="kic.media.UpdateFilesWithMetadataResponse"></a>
+
+### UpdateFilesWithMetadataResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| numFilesUpdate | [int64](#int64) |  |  |
+
+
+
+
+
+
 <a name="kic.media.UploadFileRequest"></a>
 
 ### UploadFileRequest
@@ -832,18 +904,6 @@ Response to user requesting file upload.
 
 
  
-
-
-<a name="kic.media.DeleteFileError"></a>
-
-### DeleteFileError
-These are errors used to inform the client that is requesting a connection (deleting a file) what the issue is.
-The variable names denote the issue.
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| ACCESS_DENIED | 0 | ACCESS_DENIED denotes if file is not able to be deleted due to denial of access. |
-
 
 
 <a name="kic.media.DownloadFileByNameError"></a>
@@ -888,6 +948,8 @@ Service handling fetching and storing data about files.
 | UploadFile | [UploadFileRequest](#kic.media.UploadFileRequest) stream | [UploadFileResponse](#kic.media.UploadFileResponse) | Send a file as a stream of messages, starting with a message containing a File message, then followed by an arbitrary number of messages containing bytes representing the file. The response will then confirm the number of bytes received or provide an error. |
 | DownloadFileByName | [DownloadFileRequest](#kic.media.DownloadFileRequest) | [DownloadFileResponse](#kic.media.DownloadFileResponse) stream | Using the same format as above, the service allows the client to retrieve a stored file. |
 | CheckForFileByName | [CheckForFileRequest](#kic.media.CheckForFileRequest) | [CheckForFileResponse](#kic.media.CheckForFileResponse) | Check for the existence of a file by filename |
+| UpdateFilesWithMetadata | [UpdateFilesWithMetadataRequest](#kic.media.UpdateFilesWithMetadataRequest) | [UpdateFilesWithMetadataResponse](#kic.media.UpdateFilesWithMetadataResponse) |  |
+| AddCommentToFile | [AddCommentToFileRequest](#kic.media.AddCommentToFileRequest) | [AddCommentToFileResponse](#kic.media.AddCommentToFileResponse) |  |
 | GetFilesWithMetadata | [GetFilesByMetadataRequest](#kic.media.GetFilesByMetadataRequest) | [GetFilesByMetadataResponse](#kic.media.GetFilesByMetadataResponse) | Allows for the requesting of files with specific key value pairs as metadata. The strictness can be set such that for example only perfect matches will be returned. |
 | DeleteFilesWithMetaData | [DeleteFilesWithMetaDataRequest](#kic.media.DeleteFilesWithMetaDataRequest) | [DeleteFilesWithMetaDataResponse](#kic.media.DeleteFilesWithMetaDataResponse) | Using the same strictness settings as the above, delete particular files with certain metadata. |
 
@@ -936,7 +998,6 @@ Response to a request for adding a user to the database.
 | ----- | ---- | ----- | ----------- |
 | success | [bool](#bool) |  | Denotes if the user was properly created. |
 | createdUser | [kic.common.User](#kic.common.User) |  | Inform the client of the information assigned to the user should they be accepted. |
-| errors | [AddUserError](#kic.users.AddUserError) | repeated | Array of errors which need to be fixed by the client. |
 
 
 
@@ -967,7 +1028,6 @@ Response to a request to delete a user with a given user id
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | success | [bool](#bool) |  | Denotes if the user was successfully deleted. |
-| deletedUser | [kic.common.User](#kic.common.User) |  | Inform the client of the information assigned to the user should they be accepted. |
 
 
 
@@ -993,13 +1053,12 @@ A Request to the server to return a JWT token to authenticate the remainder of t
 <a name="kic.users.GetJWTTokenResponse"></a>
 
 ### GetJWTTokenResponse
-The server response to a client request for a JWT, either providing the token or an error response.
+The server response to a client request for a JWT, providing the token.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | token | [string](#string) |  | Return the token as a string should the client send proper credentials |
-| error | [GetJWTTokenResponse.JWTError](#kic.users.GetJWTTokenResponse.JWTError) |  | Tell the client the issue with the request should one exist |
 
 
 
@@ -1031,7 +1090,6 @@ Response to a request for obtaining user data from user id
 | ----- | ---- | ----- | ----------- |
 | success | [bool](#bool) |  | denotes if the user was successfully found |
 | user | [kic.common.User](#kic.common.User) |  | User returned in response |
-| errors | [GetUserError](#kic.users.GetUserError) | repeated | Array of errors for getting user by username |
 
 
 
@@ -1063,7 +1121,6 @@ Response to a request for obtaining user data from a username
 | ----- | ---- | ----- | ----------- |
 | success | [bool](#bool) |  | denotes if the user was successfully found |
 | user | [kic.common.User](#kic.common.User) |  | User returned in response |
-| errors | [GetUserError](#kic.users.GetUserError) | repeated | Array of errors for getting user by username |
 
 
 
@@ -1108,7 +1165,12 @@ Request to update a user&#39;s information with the information provided
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| desiredInfo | [kic.common.User](#kic.common.User) |  | Only required item is the User id which is used to identify what entry to update, all other non null fields will be used to update the proper column in the database |
+| userID | [int64](#int64) |  | Only required item is the User id which is used to identify what entry to update, all other non null fields will be used to update the proper column in the database |
+| email | [string](#string) |  |  |
+| desiredUsername | [string](#string) |  |  |
+| desiredPassword | [string](#string) |  |  |
+| birthday | [kic.common.Date](#kic.common.Date) |  | User&#39;s birthday in MM/DD/YYYY format. |
+| city | [string](#string) |  | User&#39;s city location. |
 
 
 
@@ -1125,53 +1187,12 @@ Response to a request to update a user&#39;s information with the information pr
 | ----- | ---- | ----- | ----------- |
 | success | [bool](#bool) |  | Denotes if the user was properly updated. |
 | updatedUser | [kic.common.User](#kic.common.User) |  | Inform the client of the information assigned to the user. |
-| errors | [AddUserError](#kic.users.AddUserError) | repeated | Array of errors which need to be fixed by the client. |
 
 
 
 
 
  
-
-
-<a name="kic.users.AddUserError"></a>
-
-### AddUserError
-These are errors used to inform the client requesting a user be added what the issue is.
-The variable names denote the issue.
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| DUPLICATE_EMAIL | 0 | The requested email is taken. |
-| DUPLICATE_USERNAME | 1 | The requested username is taken. |
-| INVALID_PASSWORD | 2 | This is a catchall for passwords that the server has deemed unacceptable, checking may also be done on the client side. |
-| BIRTHDAY_MALFORMED | 3 | The sent date was not in the proper format. |
-
-
-
-<a name="kic.users.GetJWTTokenResponse.JWTError"></a>
-
-### GetJWTTokenResponse.JWTError
-Errors with the request that the client will need to fix
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| INVALID_PASSWORD | 0 | Incorrect password sent |
-| INVALID_USERNAME | 1 | Incorrect username sent |
-
-
-
-<a name="kic.users.GetUserError"></a>
-
-### GetUserError
-These are errors used to inform the client requesting a user what the issue is.
-The variable names denote the issue.
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| INVALID_USERNAME | 0 | The given username does not match any records |
-| INVALID_ID | 1 | User ID does not exist |
-
 
  
 
