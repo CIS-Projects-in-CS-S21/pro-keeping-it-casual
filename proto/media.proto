@@ -109,15 +109,6 @@ message GetFilesByMetadataResponse {
 }
 
 /*
-These are errors used to inform the client that is requesting a connection (deleting a file) what the issue is.
-The variable names denote the issue.
-*/
-enum DeleteFileError {
-  //ACCESS_DENIED denotes if file is not able to be deleted due to denial of access.
-  ACCESS_DENIED = 0;
-}
-
-/*
 Request to delete file for user with metadata request
  */
 message DeleteFilesWithMetaDataRequest {
@@ -132,8 +123,28 @@ message DeleteFilesWithMetaDataRequest {
 Response to  delete file for user with metadata request
  */
 message DeleteFilesWithMetaDataResponse {
-    //DeleteFileError denotes if file is not able to be deleted.
-    DeleteFileError error = 1;
+  bool success = 1;
+}
+
+message UpdateFilesWithMetadataRequest {
+  //Map of desired metadata of file to be deleted
+  map<string, string> metadata = 1;
+  // Flags sent to tell the server how seriously it wants the metadata request
+  // to be conformed to
+  MetadataStrictness strictness = 2;
+}
+
+message UpdateFilesWithMetadataResponse {
+  int64 numFilesUpdate = 1;
+}
+
+message AddCommentToFileRequest {
+  string commenterUsername = 1;
+  string comment = 2;
+}
+
+message AddCommentToFileResponse {
+  bool success = 1;
 }
 
 /*
@@ -154,6 +165,10 @@ service MediaStorage {
 
   // Check for the existence of a file by filename
   rpc CheckForFileByName(CheckForFileRequest) returns (CheckForFileResponse);
+
+  rpc UpdateFilesWithMetadata(UpdateFilesWithMetadataRequest) returns (UpdateFilesWithMetadataResponse);
+
+  rpc AddCommentToFile(AddCommentToFileRequest) returns (AddCommentToFileResponse);
 
   /*
   Allows for the requesting of files with specific key value pairs as metadata. The strictness can be set

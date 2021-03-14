@@ -53,10 +53,8 @@ message MentalHealthLog {
 Response to a user when user asks for health data.
 */
 message GetHealthDataForUserResponse {
-  //Error denotes if error occurred when obtaining health data and what the error was.
-  HealthDataError error = 1;
   //healthData denotes the data that was requested by user from mental health log
-  repeated MentalHealthLog healthData = 2;
+  repeated MentalHealthLog healthData = 1;
 }
 
 /*
@@ -67,6 +65,10 @@ message AddHealthDataForUserRequest {
   int64 userID = 1;
   //newEntry denotes the ID of the new entry that is requested to be made.
   MentalHealthLog newEntry = 2;
+}
+
+message AddHealthDataForUserResponse {
+  bool success = 1;
 }
 
 /*
@@ -104,6 +106,10 @@ message UpdateHealthDataForDateRequest {
   MentalHealthLog desiredLogInfo = 2;
 }
 
+message UpdateHealthDataForDateResponse {
+  bool success = 1;
+}
+
 /*
 Service handling fetching and storing mental health tracking data about users.
 */
@@ -111,9 +117,9 @@ service HealthTracking {
   //Given health data obtained upon user request, said health data is returned to user.
   rpc GetHealthDataForUser(GetHealthDataForUserRequest) returns (GetHealthDataForUserResponse);
   //Health data requested to be added by user is added, and error is returned if appropriate.
-  rpc AddHealthDataForUser(AddHealthDataForUserRequest) returns (HealthDataErrorResponse);
+  rpc AddHealthDataForUser(AddHealthDataForUserRequest) returns (AddHealthDataForUserResponse);
   //Health data requested by user to be deleted is deleted and said deleted entries are returned to user.
   rpc DeleteHealthDataForUser(DeleteHealthDataForUserRequest) returns (DeleteHealthDataForUserResponse);
   //Health data requested to be updated by user is updated, and error is returned if appropriate.
-  rpc UpdateHealthDataForDate(UpdateHealthDataForDateRequest) returns (HealthDataErrorResponse);
+  rpc UpdateHealthDataForDate(UpdateHealthDataForDateRequest) returns (UpdateHealthDataForDateResponse);
 }

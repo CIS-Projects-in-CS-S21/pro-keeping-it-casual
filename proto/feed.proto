@@ -11,17 +11,6 @@ option go_package = "./proto/feed;proto";
 import "proto/common.proto";
 
 /*
-These are errors used to inform the client that is requesting a connection what the issue is.
-The variable names denote the issue.
-*/
-enum GenerateFeedError {
-  // The constant representing when a user is not found.
-  USER_NOT_FOUND = 0;
-  // The constant representing when the feed has no more posts to show a user.
-  OUT_OF_POSTS  = 1;
-}
-
-/*
 Request to generate user feed for the user.
  */
 message GenerateFeedForUserRequest {
@@ -33,12 +22,8 @@ message GenerateFeedForUserRequest {
 Response to a request for generating feed for the user.
  */
 message GenerateFeedForUserResponse {
-  oneof data {
-    // The file being pulled, consisting of the file name, file location, and metadata.
-    kic.common.File fileInfo = 1;
-    // The error occurring when the feed is generated.
-    GenerateFeedError error = 2;
-  }
+  // The file being pulled, consisting of the file name, file location, and metadata.
+  kic.common.File fileInfo = 1;
 }
 
 /*

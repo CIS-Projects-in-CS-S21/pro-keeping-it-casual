@@ -45,21 +45,6 @@ message GetRecommendationsForUserResponse {
 }
 
 /*
-These are errors used to inform the client that is requesting a connection what the issue is.
-The variable names denote the issue.
-*/
-enum ConnectionError {
-  // Two users are not friends.
-  NO_FRIENDSHIP = 0;
-
-  // The first user does not exist.
-  USER_ONE_DNE = 1;
-
-  // The second user does not exist.
-  USER_TWO_DNE = 2;
-}
-
-/*
 Update the connection between two users by modifying the connection value.
  */
 message UpdateConnectionBetweenUsersRequest {
@@ -89,11 +74,8 @@ message GetConnectionBetweenUsersRequest {
 Response to a request for fetching the connection between two users.
  */
 message ConnectionBetweenUsersResponse {
-  // An error in fetching the connection.
-  ConnectionError error = 1;
-
   // Denotes the strength of the connection between two users.
-  float connectionStrength = 2;
+  float connectionStrength = 1;
 }
 
 /*
@@ -111,8 +93,7 @@ message DeleteConnectionBetweenUsersRequest {
 Response to a request for deleting a connection between two users.
  */
 message DeleteConnectionBetweenUsersResponse {
-  // An error in deleting the connection.
-  ConnectionError error = 1;
+
 }
 
 /*
@@ -127,8 +108,7 @@ message CreateConnectionForUsersRequest {
 }
 
 message CreateConnectionForUsersResponse {
-  // An error in creating the connection.
-  ConnectionError error = 1;
+  bool success = 1;
 }
 
 /*

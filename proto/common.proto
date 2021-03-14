@@ -31,6 +31,8 @@ message File {
   string fileLocation = 2;
   // Allows for arbitrary key/value metadata which can be client specific
   map<string, string> metadata = 3;
+
+  Date dateStored = 4;
 }
 
 /*
