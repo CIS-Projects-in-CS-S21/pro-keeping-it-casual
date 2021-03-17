@@ -9,8 +9,17 @@ spec:
   servers:
     - port:
         number: 80
-        name: http-prom
+        name: http
         protocol: HTTP
+      hosts:
+        - "prometheus.keeping-it-casual.com"
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: istio-mon-certs
       hosts:
         - "prometheus.keeping-it-casual.com"
 ---
@@ -30,15 +39,3 @@ spec:
             host: prometheus
             port:
               number: 9090
----
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: prometheus
-  namespace: istio-system
-spec:
-  host: prometheus
-  trafficPolicy:
-    tls:
-      mode: DISABLE
----

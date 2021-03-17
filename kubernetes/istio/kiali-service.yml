@@ -9,8 +9,17 @@ spec:
   servers:
     - port:
         number: 80
-        name: http-kiali
+        name: http
         protocol: HTTP
+      hosts:
+        - "kiali.keeping-it-casual.com"
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: istio-mon-certs
       hosts:
         - "kiali.keeping-it-casual.com"
 ---
@@ -30,16 +39,3 @@ spec:
             host: kiali
             port:
               number: 20001
----
-apiVersion: networking.istio.io/v1alpha3
-kind: DestinationRule
-metadata:
-  name: kiali
-  namespace: istio-system
-spec:
-  host: kiali
-  trafficPolicy:
-    tls:
-      mode: DISABLE
----
-

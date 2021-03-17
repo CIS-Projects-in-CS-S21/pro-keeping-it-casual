@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: istio-mon-certs
+  namespace: istio-system
+spec:
+  secretName: istio-mon-certs
+  issuerRef:
+    name: letsencrypt-prod-istio
+    kind: ClusterIssuer
+  dnsNames:
+    - kiali.keeping-it-casual.com
+    - prometheus.keeping-it-casual.com
