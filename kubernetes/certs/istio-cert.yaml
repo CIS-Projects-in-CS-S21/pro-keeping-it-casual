@@ -1,0 +1,15 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: istio-svcs-certs
+  namespace: istio-system
+spec:
+  secretName: istio-svcs-certs
+  issuerRef:
+    name: letsencrypt-prod-istio
+    kind: ClusterIssuer
+  dnsNames:
+    - keeping-it-casual.com
+    - test.keeping-it-casual.com
+    - api.keeping-it-casual.com
+    - test.api.keeping-it-casual.com

@@ -12,7 +12,20 @@ spec:
         name: http
         protocol: HTTP
       hosts:
-        - "*"
+        - keeping-it-casual.com
+        - test.keeping-it-casual.com
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      tls:
+        mode: SIMPLE
+        credentialName: istio-svcs-certs
+      hosts:
+        - keeping-it-casual.com
+        - test.keeping-it-casual.com
+        - api.keeping-it-casual.com
+        - test.api.keeping-it-casual.com
     - port:
         number: 50051
         name: grpc
