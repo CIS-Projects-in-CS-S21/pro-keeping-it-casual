@@ -47,17 +47,6 @@ message CheckForFileResponse {
 }
 
 /*
-These are errors used to inform the client that is requesting a connection (downloading a file) what the issue is.
-The variable names denote the issue.
-*/
-enum DownloadFileByNameError {
-  //FILE_NOT_FOUND denotes if file is not found.
-  FILE_NOT_FOUND = 0;
-  //BUCKET_NOT_FOUND denotes if bucket is not found.
-  BUCKET_NOT_FOUND = 1;
-}
-
-/*
 Request to download file for user
  */
 message DownloadFileRequest {
@@ -69,11 +58,7 @@ message DownloadFileRequest {
 Response to download file for user
  */
 message DownloadFileResponse {
-   //either the file can be downloaded in bytes or there is an error
-  oneof data {
-    DownloadFileByNameError error = 1;
-    bytes chunk = 2;
-  };
+    bytes chunk = 1;
 }
 
 // Flags sent with a get file by metadata request to tell the server how seriously it wants the metadata request
@@ -128,14 +113,15 @@ message DeleteFilesWithMetaDataResponse {
 
 message UpdateFilesWithMetadataRequest {
   //Map of desired metadata of file to be deleted
-  map<string, string> metadata = 1;
+  map<string, string> desiredMetadata = 1;
+  map<string, string> filterMetadata = 2;
   // Flags sent to tell the server how seriously it wants the metadata request
   // to be conformed to
-  MetadataStrictness strictness = 2;
+  MetadataStrictness strictness = 3;
 }
 
 message UpdateFilesWithMetadataResponse {
-  int64 numFilesUpdate = 1;
+  int64 numFilesUpdated = 1;
 }
 
 message AddCommentToFileRequest {
