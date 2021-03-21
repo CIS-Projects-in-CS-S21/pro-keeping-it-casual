@@ -132,8 +132,11 @@ message AddAwaitingFriendResponse {
 Service handling fetching and storing data about friends.
 */
 service Friends {
-  // Request a list of the IDs of all friends of a particular user.
+  // Request a list of the usernames of all friends of a particular user.
   rpc GetFriendsUsernamesForUser(GetFriendsForUserRequest) returns (GetFriendsUsernamesForUserResponse);
+
+  // Request a list of the usernames of all awaiting friends of a particular user.
+  rpc GetAwaitingFriendsUsernamesForUser(GetFriendsForUserRequest) returns (GetFriendsUsernamesForUserResponse);
 
   // Request a list of the IDs of all friends of a particular user.
   rpc GetFriendsForUser(GetFriendsForUserRequest) returns (GetFriendsForUserResponse);
