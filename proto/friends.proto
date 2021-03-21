@@ -26,6 +26,11 @@ message GetFriendsForUserResponse {
   repeated uint64 friends = 1;
 }
 
+message GetFriendsUsernamesForUserResponse {
+  // An array of all other users that the user is currently friends with.
+  repeated string friends = 1;
+}
+
 /*
 Request to get friend recommendations for the user.
  */
@@ -127,6 +132,9 @@ message AddAwaitingFriendResponse {
 Service handling fetching and storing data about friends.
 */
 service Friends {
+  // Request a list of the IDs of all friends of a particular user.
+  rpc GetFriendsUsernamesForUser(GetFriendsForUserRequest) returns (GetFriendsUsernamesForUserResponse);
+
   // Request a list of the IDs of all friends of a particular user.
   rpc GetFriendsForUser(GetFriendsForUserRequest) returns (GetFriendsForUserResponse);
 
