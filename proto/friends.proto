@@ -111,12 +111,26 @@ message CreateConnectionForUsersResponse {
   bool success = 1;
 }
 
+message AddAwaitingFriendRequest {
+  // ID of the first user.
+  uint64 firstUserID = 1;
+
+  // ID of the second user.
+  uint64 secondUserID = 2;
+}
+
+message AddAwaitingFriendResponse {
+  bool success = 1;
+}
+
 /*
 Service handling fetching and storing data about friends.
 */
 service Friends {
   // Request a list of the IDs of all friends of a particular user.
   rpc GetFriendsForUser(GetFriendsForUserRequest) returns (GetFriendsForUserResponse);
+
+  rpc GetAwaitingFriendsForUser(GetFriendsForUserRequest) returns (GetFriendsForUserResponse);
   // Request information about the connection between two users, checking for existence and strength.
   rpc GetConnectionBetweenUsers(GetConnectionBetweenUsersRequest) returns (ConnectionBetweenUsersResponse);
   // Request a list of given size of users who might be friends of the requesting user.
@@ -124,6 +138,8 @@ service Friends {
 
   // Add two users as friends and create a connection between them.
   rpc CreateConnectionForUsers(CreateConnectionForUsersRequest) returns (CreateConnectionForUsersResponse);
+
+  rpc AddAwaitingFriend(AddAwaitingFriendRequest) returns (AddAwaitingFriendResponse);
 
   // Update a connection strength between two users.
   rpc UpdateConnectionBetweenUsers(UpdateConnectionBetweenUsersRequest) returns (ConnectionBetweenUsersResponse);

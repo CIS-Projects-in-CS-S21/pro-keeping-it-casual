@@ -1,6 +1,6 @@
 .DEFAULT_GOAL := generate_protos
 
-BUILDER_VERSION=1.0.0
+BUILDER_VERSION=1.0.1
 
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 current_dir := $(dir $(mkfile_path))
