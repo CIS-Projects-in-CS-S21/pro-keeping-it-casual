@@ -127,6 +127,9 @@ message UpdateFilesWithMetadataResponse {
 message AddCommentToFileRequest {
   string commenterUsername = 1;
   string comment = 2;
+
+  // The ID of the file on which a comment is to be added
+  string fileID = 3;
 }
 
 message AddCommentToFileResponse {
