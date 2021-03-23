@@ -9,6 +9,12 @@ option go_package = "./proto/media;proto";
 
 import "proto/common.proto";
 
+// enum for update/overwrite flag
+enum UpdateFlag {
+  OVERWRITE = 0;
+  APPEND = 1;
+}
+
 /*
 Request to upload file for user.
  */
@@ -118,23 +124,15 @@ message UpdateFilesWithMetadataRequest {
   // Flags sent to tell the server how seriously it wants the metadata request
   // to be conformed to
   MetadataStrictness strictness = 3;
+
+  // indicates if the metadata should be overwritten or appended
+  UpdateFlag updateFlag = 4;
 }
 
 message UpdateFilesWithMetadataResponse {
   int64 numFilesUpdated = 1;
 }
 
-message AddCommentToFileRequest {
-  string commenterUsername = 1;
-  string comment = 2;
-
-  // The ID of the file on which a comment is to be added
-  string fileID = 3;
-}
-
-message AddCommentToFileResponse {
-  bool success = 1;
-}
 
 /*
 Service handling fetching and storing data about files.
@@ -156,8 +154,6 @@ service MediaStorage {
   rpc CheckForFileByName(CheckForFileRequest) returns (CheckForFileResponse);
 
   rpc UpdateFilesWithMetadata(UpdateFilesWithMetadataRequest) returns (UpdateFilesWithMetadataResponse);
-
-  rpc AddCommentToFile(AddCommentToFileRequest) returns (AddCommentToFileResponse);
 
   /*
   Allows for the requesting of files with specific key value pairs as metadata. The strictness can be set

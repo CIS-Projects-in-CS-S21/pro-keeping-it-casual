@@ -16,6 +16,8 @@
     - [Feed](#kic.feed.Feed)
   
 - [proto/friends.proto](#proto/friends.proto)
+    - [AddAwaitingFriendRequest](#kic.friends.AddAwaitingFriendRequest)
+    - [AddAwaitingFriendResponse](#kic.friends.AddAwaitingFriendResponse)
     - [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse)
     - [CreateConnectionForUsersRequest](#kic.friends.CreateConnectionForUsersRequest)
     - [CreateConnectionForUsersResponse](#kic.friends.CreateConnectionForUsersResponse)
@@ -24,6 +26,7 @@
     - [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest)
     - [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest)
     - [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse)
+    - [GetFriendsUsernamesForUserResponse](#kic.friends.GetFriendsUsernamesForUserResponse)
     - [GetRecommendationsForUserRequest](#kic.friends.GetRecommendationsForUserRequest)
     - [GetRecommendationsForUserResponse](#kic.friends.GetRecommendationsForUserResponse)
     - [UpdateConnectionBetweenUsersRequest](#kic.friends.UpdateConnectionBetweenUsersRequest)
@@ -47,8 +50,6 @@
     - [HealthTracking](#kic.health.HealthTracking)
   
 - [proto/media.proto](#proto/media.proto)
-    - [AddCommentToFileRequest](#kic.media.AddCommentToFileRequest)
-    - [AddCommentToFileResponse](#kic.media.AddCommentToFileResponse)
     - [CheckForFileRequest](#kic.media.CheckForFileRequest)
     - [CheckForFileResponse](#kic.media.CheckForFileResponse)
     - [DeleteFilesWithMetaDataRequest](#kic.media.DeleteFilesWithMetaDataRequest)
@@ -60,13 +61,14 @@
     - [GetFilesByMetadataRequest.DesiredMetadataEntry](#kic.media.GetFilesByMetadataRequest.DesiredMetadataEntry)
     - [GetFilesByMetadataResponse](#kic.media.GetFilesByMetadataResponse)
     - [UpdateFilesWithMetadataRequest](#kic.media.UpdateFilesWithMetadataRequest)
-    - [UpdateFilesWithMetadataRequest.MetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.MetadataEntry)
+    - [UpdateFilesWithMetadataRequest.DesiredMetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.DesiredMetadataEntry)
+    - [UpdateFilesWithMetadataRequest.FilterMetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.FilterMetadataEntry)
     - [UpdateFilesWithMetadataResponse](#kic.media.UpdateFilesWithMetadataResponse)
     - [UploadFileRequest](#kic.media.UploadFileRequest)
     - [UploadFileResponse](#kic.media.UploadFileResponse)
   
-    - [DownloadFileByNameError](#kic.media.DownloadFileByNameError)
     - [MetadataStrictness](#kic.media.MetadataStrictness)
+    - [UpdateFlag](#kic.media.UpdateFlag)
   
     - [MediaStorage](#kic.media.MediaStorage)
   
@@ -242,6 +244,37 @@ These are messages and services relating to a friend services, such as viewing, 
 and removing friends, as well as generating friend recommendations for a user.
 
 
+<a name="kic.friends.AddAwaitingFriendRequest"></a>
+
+### AddAwaitingFriendRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| firstUserID | [uint64](#uint64) |  | ID of the first user. |
+| secondUserID | [uint64](#uint64) |  | ID of the second user. |
+
+
+
+
+
+
+<a name="kic.friends.AddAwaitingFriendResponse"></a>
+
+### AddAwaitingFriendResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| success | [bool](#bool) |  |  |
+
+
+
+
+
+
 <a name="kic.friends.ConnectionBetweenUsersResponse"></a>
 
 ### ConnectionBetweenUsersResponse
@@ -360,6 +393,21 @@ Response to a request for getting the user&#39;s friends.
 
 
 
+<a name="kic.friends.GetFriendsUsernamesForUserResponse"></a>
+
+### GetFriendsUsernamesForUserResponse
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| friends | [string](#string) | repeated | An array of all other users that the user is currently friends with. |
+
+
+
+
+
+
 <a name="kic.friends.GetRecommendationsForUserRequest"></a>
 
 ### GetRecommendationsForUserRequest
@@ -421,10 +469,14 @@ Service handling fetching and storing data about friends.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
+| GetFriendsUsernamesForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsUsernamesForUserResponse](#kic.friends.GetFriendsUsernamesForUserResponse) | Request a list of the usernames of all friends of a particular user. |
+| GetAwaitingFriendsUsernamesForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsUsernamesForUserResponse](#kic.friends.GetFriendsUsernamesForUserResponse) | Request a list of the usernames of all awaiting friends of a particular user. |
 | GetFriendsForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse) | Request a list of the IDs of all friends of a particular user. |
+| GetAwaitingFriendsForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse) |  |
 | GetConnectionBetweenUsers | [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) | Request information about the connection between two users, checking for existence and strength. |
 | GetRecommendationsForUser | [GetRecommendationsForUserRequest](#kic.friends.GetRecommendationsForUserRequest) | [GetRecommendationsForUserResponse](#kic.friends.GetRecommendationsForUserResponse) | Request a list of given size of users who might be friends of the requesting user. |
 | CreateConnectionForUsers | [CreateConnectionForUsersRequest](#kic.friends.CreateConnectionForUsersRequest) | [CreateConnectionForUsersResponse](#kic.friends.CreateConnectionForUsersResponse) | Add two users as friends and create a connection between them. |
+| AddAwaitingFriend | [AddAwaitingFriendRequest](#kic.friends.AddAwaitingFriendRequest) | [AddAwaitingFriendResponse](#kic.friends.AddAwaitingFriendResponse) |  |
 | UpdateConnectionBetweenUsers | [UpdateConnectionBetweenUsersRequest](#kic.friends.UpdateConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) | Update a connection strength between two users. |
 | DeleteConnectionBetweenUsers | [DeleteConnectionBetweenUsersRequest](#kic.friends.DeleteConnectionBetweenUsersRequest) | [DeleteConnectionBetweenUsersResponse](#kic.friends.DeleteConnectionBetweenUsersResponse) | Delete the connection between two users. |
 
@@ -639,37 +691,6 @@ Service handling fetching and storing mental health tracking data about users.
 These are messages and services relating to a storing media, such as uploading and downloading files.
 
 
-<a name="kic.media.AddCommentToFileRequest"></a>
-
-### AddCommentToFileRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| commenterUsername | [string](#string) |  |  |
-| comment | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="kic.media.AddCommentToFileResponse"></a>
-
-### AddCommentToFileResponse
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| success | [bool](#bool) |  |  |
-
-
-
-
-
-
 <a name="kic.media.CheckForFileRequest"></a>
 
 ### CheckForFileRequest
@@ -770,7 +791,6 @@ Response to download file for user
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| error | [DownloadFileByNameError](#kic.media.DownloadFileByNameError) |  |  |
 | chunk | [bytes](#bytes) |  |  |
 
 
@@ -833,17 +853,35 @@ Response to get files for user by metadata request
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| metadata | [UpdateFilesWithMetadataRequest.MetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.MetadataEntry) | repeated | Map of desired metadata of file to be deleted |
+| desiredMetadata | [UpdateFilesWithMetadataRequest.DesiredMetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.DesiredMetadataEntry) | repeated | Map of desired metadata of file to be deleted |
+| filterMetadata | [UpdateFilesWithMetadataRequest.FilterMetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.FilterMetadataEntry) | repeated |  |
 | strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  | Flags sent to tell the server how seriously it wants the metadata request to be conformed to |
+| updateFlag | [UpdateFlag](#kic.media.UpdateFlag) |  | indicates if the metadata should be overwritten or appended |
 
 
 
 
 
 
-<a name="kic.media.UpdateFilesWithMetadataRequest.MetadataEntry"></a>
+<a name="kic.media.UpdateFilesWithMetadataRequest.DesiredMetadataEntry"></a>
 
-### UpdateFilesWithMetadataRequest.MetadataEntry
+### UpdateFilesWithMetadataRequest.DesiredMetadataEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="kic.media.UpdateFilesWithMetadataRequest.FilterMetadataEntry"></a>
+
+### UpdateFilesWithMetadataRequest.FilterMetadataEntry
 
 
 
@@ -865,7 +903,7 @@ Response to get files for user by metadata request
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| numFilesUpdate | [int64](#int64) |  |  |
+| numFilesUpdated | [int64](#int64) |  |  |
 
 
 
@@ -906,19 +944,6 @@ Response to user requesting file upload.
  
 
 
-<a name="kic.media.DownloadFileByNameError"></a>
-
-### DownloadFileByNameError
-These are errors used to inform the client that is requesting a connection (downloading a file) what the issue is.
-The variable names denote the issue.
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| FILE_NOT_FOUND | 0 | FILE_NOT_FOUND denotes if file is not found. |
-| BUCKET_NOT_FOUND | 1 | BUCKET_NOT_FOUND denotes if bucket is not found. |
-
-
-
 <a name="kic.media.MetadataStrictness"></a>
 
 ### MetadataStrictness
@@ -931,6 +956,18 @@ to be conformed to
 | CASUAL | 1 | Include a file if it matches any of the key value pairs |
 | STRICTLY_OPPOSITE | 2 | Only include a file if it fails to match all key value pairs |
 | CASUALLY_OPPOSITE | 3 | Only include a file if it matches less than all key value pairs |
+
+
+
+<a name="kic.media.UpdateFlag"></a>
+
+### UpdateFlag
+enum for update/overwrite flag
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| OVERWRITE | 0 |  |
+| APPEND | 1 |  |
 
 
  
@@ -949,7 +986,6 @@ Service handling fetching and storing data about files.
 | DownloadFileByName | [DownloadFileRequest](#kic.media.DownloadFileRequest) | [DownloadFileResponse](#kic.media.DownloadFileResponse) stream | Using the same format as above, the service allows the client to retrieve a stored file. |
 | CheckForFileByName | [CheckForFileRequest](#kic.media.CheckForFileRequest) | [CheckForFileResponse](#kic.media.CheckForFileResponse) | Check for the existence of a file by filename |
 | UpdateFilesWithMetadata | [UpdateFilesWithMetadataRequest](#kic.media.UpdateFilesWithMetadataRequest) | [UpdateFilesWithMetadataResponse](#kic.media.UpdateFilesWithMetadataResponse) |  |
-| AddCommentToFile | [AddCommentToFileRequest](#kic.media.AddCommentToFileRequest) | [AddCommentToFileResponse](#kic.media.AddCommentToFileResponse) |  |
 | GetFilesWithMetadata | [GetFilesByMetadataRequest](#kic.media.GetFilesByMetadataRequest) | [GetFilesByMetadataResponse](#kic.media.GetFilesByMetadataResponse) | Allows for the requesting of files with specific key value pairs as metadata. The strictness can be set such that for example only perfect matches will be returned. |
 | DeleteFilesWithMetaData | [DeleteFilesWithMetaDataRequest](#kic.media.DeleteFilesWithMetaDataRequest) | [DeleteFilesWithMetaDataResponse](#kic.media.DeleteFilesWithMetaDataResponse) | Using the same strictness settings as the above, delete particular files with certain metadata. |
 
