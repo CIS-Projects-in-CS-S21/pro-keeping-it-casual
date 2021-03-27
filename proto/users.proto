@@ -119,6 +119,7 @@ message UpdateUserInfoRequest {
   kic.common.Date birthday = 5;
   // User's city location.
   string city = 6;
+  string bio = 7;
 }
 
 /*
