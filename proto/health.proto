@@ -51,7 +51,7 @@ message GetHealthDataByDateRequest {
   kic.common.Date logDate = 2;
 }
 
-message GethealthDataByDateResponse {
+message GetHealthDataByDateResponse {
   //healthData denotes the data that was requested by user from mental health log
   MentalHealthLog healthData = 1;
 }
@@ -138,5 +138,5 @@ service HealthTracking {
   // Given user ID, returns a mental health score for a user
   rpc GetMentalHealthScoreForUser(GetMentalHealthScoreForUserRequest) returns (GetMentalHealthScoreForUserResponse);
   // Given a date and user ID, return health data log for a specific date
-  rpc GetHealthDataByDate(GetHealthDataByDateRequest) returns (GethealthDataByDateResponse);
+  rpc GetHealthDataByDate(GetHealthDataByDateRequest) returns (GetHealthDataByDateResponse);
 }
