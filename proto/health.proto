@@ -32,6 +32,8 @@ message MentalHealthLog {
   int32 score = 2;
   // Contains a journal entry from the user
   string journalName = 3;
+  // The ID of the user in the user database, used globally for identification.
+  int64 userID = 4;
 }
 
 /*
