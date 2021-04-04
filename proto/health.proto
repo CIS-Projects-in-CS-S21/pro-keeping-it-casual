@@ -29,7 +29,9 @@ message MentalHealthLog {
   //Date of Mental Health Log Entry
   kic.common.Date logDate = 1;
   //Score denotes the mental health tracking score from logDate.
-  uint32 score = 2;
+  int32 score = 2;
+  // Contains a journal entry from the user
+  string journalName = 3;
 }
 
 /*
@@ -38,6 +40,18 @@ Response to a user when user asks for health data.
 message GetHealthDataForUserResponse {
   //healthData denotes the data that was requested by user from mental health log
   repeated MentalHealthLog healthData = 1;
+}
+
+message GetHealthDataByDateRequest {
+  // The ID of the user in the user database, used globally for identification.
+  int64 userID = 1;
+  //Date of Mental Health Log Entry
+  kic.common.Date logDate = 2;
+}
+
+message GethealthDataByDateResponse {
+  //healthData denotes the data that was requested by user from mental health log
+  MentalHealthLog healthData = 1;
 }
 
 /*
@@ -104,7 +118,7 @@ Response to return a mental health score given a user ID
  */
 message GetMentalHealthScoreForUserResponse {
   // overall mental health score for user
-  uint32 score = 2;
+  int32 score = 1;
 }
 
 /*
@@ -120,5 +134,7 @@ service HealthTracking {
   //Health data requested to be updated by user is updated, and error is returned if appropriate.
   rpc UpdateHealthDataForDate(UpdateHealthDataForDateRequest) returns (UpdateHealthDataForDateResponse);
   // Given user ID, returns a mental health score for a user
-  rpc GetMentalHealthScoreForuser(GetMentalHealthScoreForUserRequest) returns (GetMentalHealthScoreForUserResponse);
+  rpc GetMentalHealthScoreForUser(GetMentalHealthScoreForUserRequest) returns (GetMentalHealthScoreForUserResponse);
+  // Given a date and user ID, return health data log for a specific date
+  rpc GetHealthDataByDate(GetHealthDataByDateRequest) returns (GethealthDataByDateResponse);
 }
