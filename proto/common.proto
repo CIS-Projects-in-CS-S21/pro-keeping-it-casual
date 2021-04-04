@@ -17,6 +17,9 @@ message User {
   string userName = 2;
   // The email registered by this user.
   string email = 3;
+  kic.common.Date birthday = 4;
+  string city = 5;
+  string bio = 6;
 }
 
 /*
