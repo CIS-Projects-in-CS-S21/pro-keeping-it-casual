@@ -157,4 +157,6 @@ service Friends {
 
   // Delete the connection between two users.
   rpc DeleteConnectionBetweenUsers(DeleteConnectionBetweenUsersRequest) returns (DeleteConnectionBetweenUsersResponse);
+
+  rpc DeleteAwaitingFriendBetweenUsers(DeleteConnectionBetweenUsersRequest) returns (DeleteConnectionBetweenUsersResponse);
 }
