@@ -19,11 +19,8 @@ enum UpdateFlag {
 Request to upload file for user.
  */
 message UploadFileRequest {
- //Either upload File together or in bytes
-  oneof data {
-    kic.common.File fileInfo = 1;
-    bytes chunk = 2;
-  };
+  kic.common.File fileInfo = 1;
+  bytes file = 2;
 }
 
 /*
@@ -143,7 +140,7 @@ service MediaStorage {
    followed by an arbitrary number of messages containing bytes representing the file. The response
    will then confirm the number of bytes received or provide an error.
    */
-  rpc UploadFile(stream UploadFileRequest) returns (UploadFileResponse);
+  rpc UploadFile(UploadFileRequest) returns (UploadFileResponse);
 
   /*
   Using the same format as above, the service allows the client to retrieve a stored file.
