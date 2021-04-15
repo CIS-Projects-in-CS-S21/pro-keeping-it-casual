@@ -1,7 +1,12 @@
 # Project overview
 
+
+
 ## Project Abstract
-This document proposes a social photo and video sharing application that keeps things much more casual in the media space. In the current environment, an unhealthy attachment has grown for many when it comes to their self-esteem, with the use of likes, comments, and views aiding many in validation of themselves. With Keeping It Casual (KIC), users are able to create accounts, post content, and follow others without a dependency developing and instead can focus on the simple enjoyment of a profile curated by them, a feed of their friends, and photos/videos posted without fear of judgement. For this application, there will be a simple three pages for a user to choose from, either being their feed, which consists of their following content, their own profile, which consists of their content, or the posting platform, which is where they will be able to add posts to their profile.
+
+### Keeping It Casual - A Social Media Platform Emphasizing Mental Health
+Keeping It Casual is a social media platform that maintains the wellness of its users as its main focus. In the modern digital world, social media can often do more harm than good, and many social media platforms emphasize the wrong things, like number of likes and followers or validation from others. Keeping It Casual aims to return the social media landscape to the basics by elminating likes, number of followers, and harmful interactions. On the Keeping It Casual Platform, you'll be able to post content for others to see, see posts from your loved ones, and comment on posts, but that's it! Simple, right? 
+In addition to this simplicity, Keeping It Casual provides a host of tools to prioritize your mental health, like keeping track of your mood, storing private journals, finding mental health professionals during difficult times, filtering posts with trigger tags, and more! Our hope is that Keeping It Casual can keep you connected with your friends and loved ones while maintaining the simplicity of the time before social media, allowing you to live a healthy and happy life! 
 
 ## High Level Requirement
 This project is a sharing platform very similar to Instagram, Vine, TikTok, etc, but without the same pressures of likes, comments, and shares. Users will be able to post content, follow others, and see the combination of photos and videos that their following and selves post, but interaction with these posts is not an ability KIC gives due to its proven effect on the mentality of users of other popular applications.
