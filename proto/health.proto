@@ -53,7 +53,7 @@ message GetHealthDataByDateRequest {
 
 message GetHealthDataByDateResponse {
   //healthData denotes the data that was requested by user from mental health log
-  MentalHealthLog healthData = 1;
+  repeated MentalHealthLog healthData = 1;
 }
 
 /*
@@ -120,7 +120,7 @@ Response to return a mental health score given a user ID
  */
 message GetMentalHealthScoreForUserResponse {
   // overall mental health score for user
-  int32 score = 1;
+  double score = 1;
 }
 
 /*
