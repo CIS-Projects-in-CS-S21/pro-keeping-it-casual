@@ -120,7 +120,7 @@ Response to return a mental health score given a user ID
  */
 message GetMentalHealthScoreForUserResponse {
   // overall mental health score for user
-  double score = 1;
+  int32 score = 1;
 }
 
 /*
