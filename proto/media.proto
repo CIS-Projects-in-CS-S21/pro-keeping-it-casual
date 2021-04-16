@@ -20,7 +20,7 @@ Request to upload file for user.
  */
 message UploadFileRequest {
   kic.common.File fileInfo = 1;
-  bytes file = 2;
+  string fileURI = 2;
 }
 
 /*
@@ -61,7 +61,7 @@ message DownloadFileRequest {
 Response to download file for user
  */
 message DownloadFileResponse {
-    bytes chunk = 1;
+    string chunk = 1;
 }
 
 // Flags sent with a get file by metadata request to tell the server how seriously it wants the metadata request
