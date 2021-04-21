@@ -647,7 +647,7 @@ Response to return a mental health score given a user ID
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| score | [double](#double) |  | The overall mental health score for the requested user. |
+| score | [int32](#int32) |  | The overall mental health score for the requested user. |
 
 
 
@@ -1056,9 +1056,9 @@ Request for a user to be added to the user database.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| email | [string](#string) |  |  |
-| desiredUsername | [string](#string) |  |  |
-| desiredPassword | [string](#string) |  |  |
+| email | [string](#string) |  | The email of the user, must be unique. |
+| desiredUsername | [string](#string) |  | The username of the user, must also be unique. |
+| desiredPassword | [string](#string) |  | The password the user would like stored |
 | birthday | [kic.common.Date](#kic.common.Date) |  | User&#39;s birthday in MM/DD/YYYY format. |
 | city | [string](#string) |  | User&#39;s city location. |
 
@@ -1246,9 +1246,9 @@ and the userID is not mutable.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | userID | [int64](#int64) |  | Only required item is the UserID which is used to identify what entry to update, all other non null fields will be used to update the proper column in the database |
-| email | [string](#string) |  |  |
-| desiredUsername | [string](#string) |  |  |
-| desiredPassword | [string](#string) |  |  |
+| email | [string](#string) |  | The email of the user, must be unique. |
+| desiredUsername | [string](#string) |  | The username of the user, must also be unique. |
+| desiredPassword | [string](#string) |  | The password the user would like stored. |
 | birthday | [kic.common.Date](#kic.common.Date) |  | User&#39;s birthday in MM/DD/YYYY format. |
 | city | [string](#string) |  | User&#39;s city location. |
 | bio | [string](#string) |  | The new bio that the user would like displayed. |

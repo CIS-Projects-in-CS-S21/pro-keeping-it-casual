@@ -18,8 +18,11 @@ import "proto/common.proto";
 Request for a user to be added to the user database.
 */
 message AddUserRequest {
+  // The email of the user, must be unique.
   string email = 1;
+  // The username of the user, must also be unique.
   string desiredUsername = 2;
+  // The password the user would like stored
   string desiredPassword = 3;
   // User's birthday in MM/DD/YYYY format.
   kic.common.Date birthday = 4;
@@ -113,8 +116,11 @@ message UpdateUserInfoRequest {
   // Only required item is the UserID which is used to identify what entry to update,
   // all other non null fields will be used to update the proper column in the database
   int64 userID = 1;
+  // The email of the user, must be unique.
   string email = 2;
+  // The username of the user, must also be unique.
   string desiredUsername = 3;
+  // The password the user would like stored.
   string desiredPassword = 4;
   // User's birthday in MM/DD/YYYY format.
   kic.common.Date birthday = 5;
