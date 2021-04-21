@@ -8,7 +8,8 @@ package kic.common;
 option go_package = "./proto/common;proto";
 
 /*
-A representation of a User that will be used to identify them between services.
+A representation of a User that will be used to identify them between services and when being displayed
+on the frontend.
  */
 message User {
   // The ID of the user in the user database, used globally for identification.
@@ -17,8 +18,11 @@ message User {
   string userName = 2;
   // The email registered by this user.
   string email = 3;
+  // The birthday of the user.
   kic.common.Date birthday = 4;
+  // The city that the user is from.
   string city = 5;
+  // The bio the user would like to be displayed about them.
   string bio = 6;
 }
 
@@ -28,13 +32,14 @@ metadata is allowed through key value pairs, which allows for example a file to 
 user.
  */
 message File {
-  // Simply the file name with an extension
+  // Simply the file name with an extension.
   string fileName = 1;
-  // This is a client specific file location, for example a google cloud bucket name
+  // This is a client specific file location, for example a google cloud bucket name.
   string fileLocation = 2;
-  // Allows for arbitrary key/value metadata which can be client specific
+  // Allows for arbitrary key/value metadata which can be client specific, for example the ID of the user
+  // of interest can be stored here .
   map<string, string> metadata = 3;
-
+  // The date of storage of the file, used in particular for feed generation.
   Date dateStored = 4;
 }
 

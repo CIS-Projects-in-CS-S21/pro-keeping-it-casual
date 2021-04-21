@@ -23,46 +23,52 @@ message GetHealthDataForUserRequest {
 }
 
 /*
-Response to a user with complete mental health log
+A message representing a single Mental Health Log entry.
 */
 message MentalHealthLog {
-  //Date of Mental Health Log Entry
+  // Date of Mental Health Log Entry.
   kic.common.Date logDate = 1;
-  //Score denotes the mental health tracking score from logDate.
+  // The score the user gave their current mood at the time of the log submittal.
   int32 score = 2;
-  // Contains a journal entry from the user
+  // Contains a journal entry from the user, allowing them to write about how they currently are feeling.
   string journalName = 3;
   // The ID of the user in the user database, used globally for identification.
   int64 userID = 4;
 }
 
 /*
-Response to a user when user asks for health data.
+Response when Mental Health Logs are requested for a given user, providing all applicable logs.
 */
 message GetHealthDataForUserResponse {
-  //healthData denotes the data that was requested by user from mental health log
-  repeated MentalHealthLog healthData = 1;
-}
-
-message GetHealthDataByDateRequest {
-  // The ID of the user in the user database, used globally for identification.
-  int64 userID = 1;
-  //Date of Mental Health Log Entry
-  kic.common.Date logDate = 2;
-}
-
-message GetHealthDataByDateResponse {
-  //healthData denotes the data that was requested by user from mental health log
+  // Denotes the data that was requested by user from the Mental Health Log.
   repeated MentalHealthLog healthData = 1;
 }
 
 /*
-Request from a user to add their mental health data to MentalHealthLog.
+Request for the Mental Health Log for a particular date.
+*/
+message GetHealthDataByDateRequest {
+  // The ID of the user in the user database, used globally for identification.
+  int64 userID = 1;
+  // Date of Mental Health Log Entry
+  kic.common.Date logDate = 2;
+}
+
+/*
+Response containing the Mental Health Logs for a given date.
+*/
+message GetHealthDataByDateResponse {
+  // List of all the Mental Health Log entries for the date requested.
+  repeated MentalHealthLog healthData = 1;
+}
+
+/*
+Request from a user to add their mental health data to the Mental Health Log.
 */
 message AddHealthDataForUserRequest {
   // The ID of the user in the user database, used globally for identification.
   int64 userID = 1;
-  //newEntry denotes the ID of the new entry that is requested to be made.
+  // The MentalHealthLog being submitted for storage in the backend.
   MentalHealthLog newEntry = 2;
 }
 
@@ -76,20 +82,20 @@ Request from a user to delete their mental health data from MentalHealthLog.
 message DeleteHealthDataForUserRequest {
   // The ID of the user in the user database, used globally for identification.
   int64 userID = 1;
-  //Either delete all of data or delete specific date
+  // Either delete all of data or delete specific date
   oneof data {
-    //all denotes if all of the health data should be removed or not.
+    // Denotes that all of the health data should be removed.
     bool all = 2;
-    //dateToRemove denotes the date of the mental health log data to remove.
+    // Denotes the date of the mental health log data to remove.
     kic.common.Date dateToRemove = 3;
   }
 }
 
 /*
-Response to a user when user asks to delete health data.
+Response to a request to delete health data.
 */
 message DeleteHealthDataForUserResponse {
-  //entriesDeleted denotes the mental health log entries that was successfully deleted for the user
+  // Denotes the number of Mental Health Log entries that was successfully deleted for the user
   uint32 entriesDeleted = 1;
 }
 
@@ -99,11 +105,15 @@ Request from a user to update their mental health tracking data for a particular
 message UpdateHealthDataForDateRequest {
   // The ID of the user in the user database, used globally for identification.
   int64 userID = 1;
-  //The desiredLogInfo denotes the log info that the user would like to update.
+  // Denotes the log info that the user would like to update.
   MentalHealthLog desiredLogInfo = 2;
 }
 
+/*
+Request from a user to update their mental health tracking data for a particular date.
+*/
 message UpdateHealthDataForDateResponse {
+  // Denotes if the log entry was successfully updated
   bool success = 1;
 }
 
@@ -119,12 +129,12 @@ message GetMentalHealthScoreForUserRequest {
 Response to return a mental health score given a user ID
  */
 message GetMentalHealthScoreForUserResponse {
-  // overall mental health score for user
+  // The overall mental health score for the requested user.
   double score = 1;
 }
 
 /*
-Service handling fetching and storing mental health tracking data about users.
+Interface provided by a service handling fetching and storing mental health tracking data about users.
 */
 service HealthTracking {
   //Given health data obtained upon user request, said health data is returned to user.

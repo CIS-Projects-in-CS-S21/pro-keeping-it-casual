@@ -27,7 +27,7 @@ message GenerateFeedForUserResponse {
 }
 
 /*
-Service handling generating data for user feed
+Interface provided by a service handling generating data for user feed
 */
 service Feed {
   // Generate a stream of posts until either exhausted or the client requests an end.

@@ -9,9 +9,11 @@ option go_package = "./proto/media;proto";
 
 import "proto/common.proto";
 
-// enum for update/overwrite flag
+// Enum for Update Operation update flag.
 enum UpdateFlag {
+  // Should the operation overwrite existing metadata.
   OVERWRITE = 0;
+  // Should the operation append to existing metadata values, when it makes sense to.
   APPEND = 1;
 }
 
@@ -19,7 +21,9 @@ enum UpdateFlag {
 Request to upload file for user.
  */
 message UploadFileRequest {
+  // File information that should be stored with the file.
   kic.common.File fileInfo = 1;
+  // Base64 encoding of the file which will be stored.
   string fileURI = 2;
 }
 
@@ -53,14 +57,15 @@ message CheckForFileResponse {
 Request to download file for user
  */
 message DownloadFileRequest {
-//Information of file to be downloaded
+  //Information of file to be downloaded
   kic.common.File fileInfo = 1;
 }
 
 /*
-Response to download file for user
+Response to download file for user.
  */
 message DownloadFileResponse {
+    //
     string chunk = 1;
 }
 
@@ -92,7 +97,7 @@ message GetFilesByMetadataRequest {
 Response to get files for user by metadata request
  */
 message GetFilesByMetadataResponse {
-  //Information of file to be downloaded
+  // Information of file to be downloaded
   repeated kic.common.File fileInfos = 1;
 }
 
@@ -108,48 +113,54 @@ message DeleteFilesWithMetaDataRequest {
 }
 
 /*
-Response to  delete file for user with metadata request
+Response to delete file for user with metadata request
  */
 message DeleteFilesWithMetaDataResponse {
+  // Whether the delete operation was successful
   bool success = 1;
 }
 
+/*
+Request to update files that contain matching metadata.
+ */
 message UpdateFilesWithMetadataRequest {
-  //Map of desired metadata of file to be deleted
+  // Map of the field that should be updated in the stored map, or created if they do not exist.
   map<string, string> desiredMetadata = 1;
+  // The metadata used as a selector for what files to update.
   map<string, string> filterMetadata = 2;
   // Flags sent to tell the server how seriously it wants the metadata request
-  // to be conformed to
+  // to be conformed to.
   MetadataStrictness strictness = 3;
-
-  // indicates if the metadata should be overwritten or appended
+  // Indicates if the metadata should be overwritten or appended to.
   UpdateFlag updateFlag = 4;
 }
 
+/*
+Response to a request to update the metadata for a set of files.
+ */
 message UpdateFilesWithMetadataResponse {
+  // The number of files updated by the operation
   int64 numFilesUpdated = 1;
 }
 
 
 /*
-Service handling fetching and storing data about files.
+Interface provided by a service handling fetching and storing data about files.
 */
 service MediaStorage {
-  /*
-   Send a file as a stream of messages, starting with a message containing a File message, then
-   followed by an arbitrary number of messages containing bytes representing the file. The response
-   will then confirm the number of bytes received or provide an error.
-   */
+
+  // Upload a file as a single base64 encoded string.
   rpc UploadFile(UploadFileRequest) returns (UploadFileResponse);
 
   /*
-  Using the same format as above, the service allows the client to retrieve a stored file.
+   Send a file as a stream of messages containing a base64 encoding representing the file.
    */
   rpc DownloadFileByName(DownloadFileRequest) returns (stream DownloadFileResponse);
 
-  // Check for the existence of a file by filename
+  // Check for the existence of a file by filename.
   rpc CheckForFileByName(CheckForFileRequest) returns (CheckForFileResponse);
 
+  // Update a set of files with new metadata values.
   rpc UpdateFilesWithMetadata(UpdateFilesWithMetadataRequest) returns (UpdateFilesWithMetadataResponse);
 
   /*

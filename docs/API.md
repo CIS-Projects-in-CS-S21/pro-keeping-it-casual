@@ -38,14 +38,15 @@
     - [AddHealthDataForUserResponse](#kic.health.AddHealthDataForUserResponse)
     - [DeleteHealthDataForUserRequest](#kic.health.DeleteHealthDataForUserRequest)
     - [DeleteHealthDataForUserResponse](#kic.health.DeleteHealthDataForUserResponse)
+    - [GetHealthDataByDateRequest](#kic.health.GetHealthDataByDateRequest)
+    - [GetHealthDataByDateResponse](#kic.health.GetHealthDataByDateResponse)
     - [GetHealthDataForUserRequest](#kic.health.GetHealthDataForUserRequest)
     - [GetHealthDataForUserResponse](#kic.health.GetHealthDataForUserResponse)
-    - [HealthDataErrorResponse](#kic.health.HealthDataErrorResponse)
+    - [GetMentalHealthScoreForUserRequest](#kic.health.GetMentalHealthScoreForUserRequest)
+    - [GetMentalHealthScoreForUserResponse](#kic.health.GetMentalHealthScoreForUserResponse)
     - [MentalHealthLog](#kic.health.MentalHealthLog)
     - [UpdateHealthDataForDateRequest](#kic.health.UpdateHealthDataForDateRequest)
     - [UpdateHealthDataForDateResponse](#kic.health.UpdateHealthDataForDateResponse)
-  
-    - [HealthDataError](#kic.health.HealthDataError)
   
     - [HealthTracking](#kic.health.HealthTracking)
   
@@ -128,10 +129,10 @@ user.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| fileName | [string](#string) |  | Simply the file name with an extension |
-| fileLocation | [string](#string) |  | This is a client specific file location, for example a google cloud bucket name |
-| metadata | [File.MetadataEntry](#kic.common.File.MetadataEntry) | repeated | Allows for arbitrary key/value metadata which can be client specific |
-| dateStored | [Date](#kic.common.Date) |  |  |
+| fileName | [string](#string) |  | Simply the file name with an extension. |
+| fileLocation | [string](#string) |  | This is a client specific file location, for example a google cloud bucket name. |
+| metadata | [File.MetadataEntry](#kic.common.File.MetadataEntry) | repeated | Allows for arbitrary key/value metadata which can be client specific, for example the ID of the user of interest can be stored here . |
+| dateStored | [Date](#kic.common.Date) |  | The date of storage of the file, used in particular for feed generation. |
 
 
 
@@ -157,7 +158,8 @@ user.
 <a name="kic.common.User"></a>
 
 ### User
-A representation of a User that will be used to identify them between services.
+A representation of a User that will be used to identify them between services and when being displayed
+on the frontend.
 
 
 | Field | Type | Label | Description |
@@ -165,6 +167,9 @@ A representation of a User that will be used to identify them between services.
 | userID | [int64](#int64) |  | The ID of the user in the user database, used globally for identification. |
 | userName | [string](#string) |  | User&#39;s account username. |
 | email | [string](#string) |  | The email registered by this user. |
+| birthday | [Date](#kic.common.Date) |  | The birthday of the user. |
+| city | [string](#string) |  | The city that the user is from. |
+| bio | [string](#string) |  | The bio the user would like to be displayed about them. |
 
 
 
@@ -226,7 +231,7 @@ Response to a request for generating feed for the user.
 <a name="kic.feed.Feed"></a>
 
 ### Feed
-Service handling generating data for user feed
+Interface provided by a service handling generating data for user feed
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
@@ -247,7 +252,8 @@ and removing friends, as well as generating friend recommendations for a user.
 <a name="kic.friends.AddAwaitingFriendRequest"></a>
 
 ### AddAwaitingFriendRequest
-
+Request representing the case where the first user sends a friend request to the second user, so that they will
+be displayed in the second user&#39;s pending friends.
 
 
 | Field | Type | Label | Description |
@@ -263,12 +269,12 @@ and removing friends, as well as generating friend recommendations for a user.
 <a name="kic.friends.AddAwaitingFriendResponse"></a>
 
 ### AddAwaitingFriendResponse
-
+Request denoting whether the friend request was properly sent to the second user.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| success | [bool](#bool) |  |  |
+| success | [bool](#bool) |  | Was the friend request created successfully |
 
 
 
@@ -309,12 +315,12 @@ Request for two users to become friends.
 <a name="kic.friends.CreateConnectionForUsersResponse"></a>
 
 ### CreateConnectionForUsersResponse
-
+Request denoting whether the connection was successfully created between two users.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| success | [bool](#bool) |  |  |
+| success | [bool](#bool) |  | Was the connection created successfully |
 
 
 
@@ -366,12 +372,12 @@ Retrieve the connection between two users.
 <a name="kic.friends.GetFriendsForUserRequest"></a>
 
 ### GetFriendsForUserRequest
-Request to get the user&#39;s friends.
+Request to get the provided user&#39;s friends.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| user | [kic.common.User](#kic.common.User) |  | Inform the client of information regarding the user. |
+| user | [kic.common.User](#kic.common.User) |  | Inform the backend of information regarding the user you would like the friends of. |
 
 
 
@@ -381,7 +387,7 @@ Request to get the user&#39;s friends.
 <a name="kic.friends.GetFriendsForUserResponse"></a>
 
 ### GetFriendsForUserResponse
-Response to a request for getting the user&#39;s friends.
+Response to a request for getting the user&#39;s friends, returning the user IDs of all the user&#39;s friends.
 
 
 | Field | Type | Label | Description |
@@ -396,7 +402,7 @@ Response to a request for getting the user&#39;s friends.
 <a name="kic.friends.GetFriendsUsernamesForUserResponse"></a>
 
 ### GetFriendsUsernamesForUserResponse
-
+Response to a request for getting the the usernames of all the friends of a given user.
 
 
 | Field | Type | Label | Description |
@@ -465,20 +471,21 @@ Update the connection between two users by modifying the connection value.
 <a name="kic.friends.Friends"></a>
 
 ### Friends
-Service handling fetching and storing data about friends.
+Interface provided by a service handling fetching and storing data about friends.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
 | GetFriendsUsernamesForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsUsernamesForUserResponse](#kic.friends.GetFriendsUsernamesForUserResponse) | Request a list of the usernames of all friends of a particular user. |
 | GetAwaitingFriendsUsernamesForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsUsernamesForUserResponse](#kic.friends.GetFriendsUsernamesForUserResponse) | Request a list of the usernames of all awaiting friends of a particular user. |
 | GetFriendsForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse) | Request a list of the IDs of all friends of a particular user. |
-| GetAwaitingFriendsForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse) |  |
+| GetAwaitingFriendsForUser | [GetFriendsForUserRequest](#kic.friends.GetFriendsForUserRequest) | [GetFriendsForUserResponse](#kic.friends.GetFriendsForUserResponse) | Request a list of the IDs of all pending friends of a particular user. |
 | GetConnectionBetweenUsers | [GetConnectionBetweenUsersRequest](#kic.friends.GetConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) | Request information about the connection between two users, checking for existence and strength. |
 | GetRecommendationsForUser | [GetRecommendationsForUserRequest](#kic.friends.GetRecommendationsForUserRequest) | [GetRecommendationsForUserResponse](#kic.friends.GetRecommendationsForUserResponse) | Request a list of given size of users who might be friends of the requesting user. |
 | CreateConnectionForUsers | [CreateConnectionForUsersRequest](#kic.friends.CreateConnectionForUsersRequest) | [CreateConnectionForUsersResponse](#kic.friends.CreateConnectionForUsersResponse) | Add two users as friends and create a connection between them. |
-| AddAwaitingFriend | [AddAwaitingFriendRequest](#kic.friends.AddAwaitingFriendRequest) | [AddAwaitingFriendResponse](#kic.friends.AddAwaitingFriendResponse) |  |
+| AddAwaitingFriend | [AddAwaitingFriendRequest](#kic.friends.AddAwaitingFriendRequest) | [AddAwaitingFriendResponse](#kic.friends.AddAwaitingFriendResponse) | Create a friend request between two users. |
 | UpdateConnectionBetweenUsers | [UpdateConnectionBetweenUsersRequest](#kic.friends.UpdateConnectionBetweenUsersRequest) | [ConnectionBetweenUsersResponse](#kic.friends.ConnectionBetweenUsersResponse) | Update a connection strength between two users. |
 | DeleteConnectionBetweenUsers | [DeleteConnectionBetweenUsersRequest](#kic.friends.DeleteConnectionBetweenUsersRequest) | [DeleteConnectionBetweenUsersResponse](#kic.friends.DeleteConnectionBetweenUsersResponse) | Delete the connection between two users. |
+| DeleteAwaitingFriendBetweenUsers | [DeleteConnectionBetweenUsersRequest](#kic.friends.DeleteConnectionBetweenUsersRequest) | [DeleteConnectionBetweenUsersResponse](#kic.friends.DeleteConnectionBetweenUsersResponse) | Delete the pending friend request between two users. |
 
  
 
@@ -496,13 +503,13 @@ from day to day.
 <a name="kic.health.AddHealthDataForUserRequest"></a>
 
 ### AddHealthDataForUserRequest
-Request from a user to add their mental health data to MentalHealthLog.
+Request from a user to add their mental health data to the Mental Health Log.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | userID | [int64](#int64) |  | The ID of the user in the user database, used globally for identification. |
-| newEntry | [MentalHealthLog](#kic.health.MentalHealthLog) |  | newEntry denotes the ID of the new entry that is requested to be made. |
+| newEntry | [MentalHealthLog](#kic.health.MentalHealthLog) |  | The MentalHealthLog being submitted for storage in the backend. |
 
 
 
@@ -533,8 +540,8 @@ Request from a user to delete their mental health data from MentalHealthLog.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | userID | [int64](#int64) |  | The ID of the user in the user database, used globally for identification. |
-| all | [bool](#bool) |  | all denotes if all of the health data should be removed or not. |
-| dateToRemove | [kic.common.Date](#kic.common.Date) |  | dateToRemove denotes the date of the mental health log data to remove. |
+| all | [bool](#bool) |  | Denotes that all of the health data should be removed. |
+| dateToRemove | [kic.common.Date](#kic.common.Date) |  | Denotes the date of the mental health log data to remove. |
 
 
 
@@ -544,13 +551,43 @@ Request from a user to delete their mental health data from MentalHealthLog.
 <a name="kic.health.DeleteHealthDataForUserResponse"></a>
 
 ### DeleteHealthDataForUserResponse
-Response to a user when user asks to delete health data.
+Response to a request to delete health data.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| error | [HealthDataError](#kic.health.HealthDataError) |  | Error denotes if error occurred when deleting health data and the ID of the error it was. |
-| entriesDeleted | [uint32](#uint32) |  | entriesDeleted denotes the mental health log entries that was successfully deleted for the user |
+| entriesDeleted | [uint32](#uint32) |  | Denotes the number of Mental Health Log entries that was successfully deleted for the user |
+
+
+
+
+
+
+<a name="kic.health.GetHealthDataByDateRequest"></a>
+
+### GetHealthDataByDateRequest
+Request for the Mental Health Log for a particular date.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| userID | [int64](#int64) |  | The ID of the user in the user database, used globally for identification. |
+| logDate | [kic.common.Date](#kic.common.Date) |  | Date of Mental Health Log Entry |
+
+
+
+
+
+
+<a name="kic.health.GetHealthDataByDateResponse"></a>
+
+### GetHealthDataByDateResponse
+Response containing the Mental Health Logs for a given date.
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| healthData | [MentalHealthLog](#kic.health.MentalHealthLog) | repeated | List of all the Mental Health Log entries for the date requested. |
 
 
 
@@ -575,27 +612,42 @@ Request from a user to get their mental health tracking data.
 <a name="kic.health.GetHealthDataForUserResponse"></a>
 
 ### GetHealthDataForUserResponse
-Response to a user when user asks for health data.
+Response when Mental Health Logs are requested for a given user, providing all applicable logs.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| healthData | [MentalHealthLog](#kic.health.MentalHealthLog) | repeated | healthData denotes the data that was requested by user from mental health log |
+| healthData | [MentalHealthLog](#kic.health.MentalHealthLog) | repeated | Denotes the data that was requested by user from the Mental Health Log. |
 
 
 
 
 
 
-<a name="kic.health.HealthDataErrorResponse"></a>
+<a name="kic.health.GetMentalHealthScoreForUserRequest"></a>
 
-### HealthDataErrorResponse
-Response to a user when there is a mental health data error.
+### GetMentalHealthScoreForUserRequest
+Request form a user to get a mental health score
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| error | [HealthDataError](#kic.health.HealthDataError) |  | Error denotes if error occurred with health data. |
+| userID | [int64](#int64) |  | The ID of the user in the user database, used globally for identification. |
+
+
+
+
+
+
+<a name="kic.health.GetMentalHealthScoreForUserResponse"></a>
+
+### GetMentalHealthScoreForUserResponse
+Response to return a mental health score given a user ID
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| score | [double](#double) |  | The overall mental health score for the requested user. |
 
 
 
@@ -605,13 +657,15 @@ Response to a user when there is a mental health data error.
 <a name="kic.health.MentalHealthLog"></a>
 
 ### MentalHealthLog
-Response to a user with complete mental health log
+A message representing a single Mental Health Log entry.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| logDate | [kic.common.Date](#kic.common.Date) |  | Date of Mental Health Log Entry |
-| score | [uint32](#uint32) |  | Score denotes the mental health tracking score from logDate. |
+| logDate | [kic.common.Date](#kic.common.Date) |  | Date of Mental Health Log Entry. |
+| score | [int32](#int32) |  | The score the user gave their current mood at the time of the log submittal. |
+| journalName | [string](#string) |  | Contains a journal entry from the user, allowing them to write about how they currently are feeling. |
+| userID | [int64](#int64) |  | The ID of the user in the user database, used globally for identification. |
 
 
 
@@ -627,7 +681,7 @@ Request from a user to update their mental health tracking data for a particular
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | userID | [int64](#int64) |  | The ID of the user in the user database, used globally for identification. |
-| desiredLogInfo | [MentalHealthLog](#kic.health.MentalHealthLog) |  | The desiredLogInfo denotes the log info that the user would like to update. |
+| desiredLogInfo | [MentalHealthLog](#kic.health.MentalHealthLog) |  | Denotes the log info that the user would like to update. |
 
 
 
@@ -637,31 +691,18 @@ Request from a user to update their mental health tracking data for a particular
 <a name="kic.health.UpdateHealthDataForDateResponse"></a>
 
 ### UpdateHealthDataForDateResponse
-
+Request from a user to update their mental health tracking data for a particular date.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| success | [bool](#bool) |  |  |
+| success | [bool](#bool) |  | Denotes if the log entry was successfully updated |
 
 
 
 
 
  
-
-
-<a name="kic.health.HealthDataError"></a>
-
-### HealthDataError
-These are errors used to inform the client requesting health data what the issue is.
-The variable names denote the issue.
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| USER_NOT_FOUND | 0 | USER_NOT_FOUND denotes if user is not found. |
-| DATE_NOT_FOUND | 1 | DATE_NOT_FOUND denotes if date is not found. |
-
 
  
 
@@ -671,7 +712,7 @@ The variable names denote the issue.
 <a name="kic.health.HealthTracking"></a>
 
 ### HealthTracking
-Service handling fetching and storing mental health tracking data about users.
+Interface provided by a service handling fetching and storing mental health tracking data about users.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
@@ -679,6 +720,8 @@ Service handling fetching and storing mental health tracking data about users.
 | AddHealthDataForUser | [AddHealthDataForUserRequest](#kic.health.AddHealthDataForUserRequest) | [AddHealthDataForUserResponse](#kic.health.AddHealthDataForUserResponse) | Health data requested to be added by user is added, and error is returned if appropriate. |
 | DeleteHealthDataForUser | [DeleteHealthDataForUserRequest](#kic.health.DeleteHealthDataForUserRequest) | [DeleteHealthDataForUserResponse](#kic.health.DeleteHealthDataForUserResponse) | Health data requested by user to be deleted is deleted and said deleted entries are returned to user. |
 | UpdateHealthDataForDate | [UpdateHealthDataForDateRequest](#kic.health.UpdateHealthDataForDateRequest) | [UpdateHealthDataForDateResponse](#kic.health.UpdateHealthDataForDateResponse) | Health data requested to be updated by user is updated, and error is returned if appropriate. |
+| GetMentalHealthScoreForUser | [GetMentalHealthScoreForUserRequest](#kic.health.GetMentalHealthScoreForUserRequest) | [GetMentalHealthScoreForUserResponse](#kic.health.GetMentalHealthScoreForUserResponse) | Given user ID, returns a mental health score for a user |
+| GetHealthDataByDate | [GetHealthDataByDateRequest](#kic.health.GetHealthDataByDateRequest) | [GetHealthDataByDateResponse](#kic.health.GetHealthDataByDateResponse) | Given a date and user ID, return health data log for a specific date |
 
  
 
@@ -756,12 +799,12 @@ Request to delete file for user with metadata request
 <a name="kic.media.DeleteFilesWithMetaDataResponse"></a>
 
 ### DeleteFilesWithMetaDataResponse
-Response to  delete file for user with metadata request
+Response to delete file for user with metadata request
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| success | [bool](#bool) |  |  |
+| success | [bool](#bool) |  | Whether the delete operation was successful |
 
 
 
@@ -786,12 +829,12 @@ Request to download file for user
 <a name="kic.media.DownloadFileResponse"></a>
 
 ### DownloadFileResponse
-Response to download file for user
+Response to download file for user.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| chunk | [bytes](#bytes) |  |  |
+| chunk | [string](#string) |  |  |
 
 
 
@@ -848,15 +891,15 @@ Response to get files for user by metadata request
 <a name="kic.media.UpdateFilesWithMetadataRequest"></a>
 
 ### UpdateFilesWithMetadataRequest
-
+Request to update files that contain matching metadata.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| desiredMetadata | [UpdateFilesWithMetadataRequest.DesiredMetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.DesiredMetadataEntry) | repeated | Map of desired metadata of file to be deleted |
-| filterMetadata | [UpdateFilesWithMetadataRequest.FilterMetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.FilterMetadataEntry) | repeated |  |
-| strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  | Flags sent to tell the server how seriously it wants the metadata request to be conformed to |
-| updateFlag | [UpdateFlag](#kic.media.UpdateFlag) |  | indicates if the metadata should be overwritten or appended |
+| desiredMetadata | [UpdateFilesWithMetadataRequest.DesiredMetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.DesiredMetadataEntry) | repeated | Map of the field that should be updated in the stored map, or created if they do not exist. |
+| filterMetadata | [UpdateFilesWithMetadataRequest.FilterMetadataEntry](#kic.media.UpdateFilesWithMetadataRequest.FilterMetadataEntry) | repeated | The metadata used as a selector for what files to update. |
+| strictness | [MetadataStrictness](#kic.media.MetadataStrictness) |  | Flags sent to tell the server how seriously it wants the metadata request to be conformed to. |
+| updateFlag | [UpdateFlag](#kic.media.UpdateFlag) |  | Indicates if the metadata should be overwritten or appended to. |
 
 
 
@@ -898,12 +941,12 @@ Response to get files for user by metadata request
 <a name="kic.media.UpdateFilesWithMetadataResponse"></a>
 
 ### UpdateFilesWithMetadataResponse
-
+Response to a request to update the metadata for a set of files.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| numFilesUpdated | [int64](#int64) |  |  |
+| numFilesUpdated | [int64](#int64) |  | The number of files updated by the operation |
 
 
 
@@ -918,8 +961,8 @@ Request to upload file for user.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| fileInfo | [kic.common.File](#kic.common.File) |  |  |
-| chunk | [bytes](#bytes) |  |  |
+| fileInfo | [kic.common.File](#kic.common.File) |  | File information that should be stored with the file. |
+| fileURI | [string](#string) |  | Base64 encoding of the file which will be stored. |
 
 
 
@@ -962,12 +1005,12 @@ to be conformed to
 <a name="kic.media.UpdateFlag"></a>
 
 ### UpdateFlag
-enum for update/overwrite flag
+Enum for Update Operation update flag.
 
 | Name | Number | Description |
 | ---- | ------ | ----------- |
-| OVERWRITE | 0 |  |
-| APPEND | 1 |  |
+| OVERWRITE | 0 | Should the operation overwrite existing metadata. |
+| APPEND | 1 | Should the operation append to existing metadata values, when it makes sense to. |
 
 
  
@@ -978,14 +1021,14 @@ enum for update/overwrite flag
 <a name="kic.media.MediaStorage"></a>
 
 ### MediaStorage
-Service handling fetching and storing data about files.
+Interface provided by a service handling fetching and storing data about files.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
-| UploadFile | [UploadFileRequest](#kic.media.UploadFileRequest) stream | [UploadFileResponse](#kic.media.UploadFileResponse) | Send a file as a stream of messages, starting with a message containing a File message, then followed by an arbitrary number of messages containing bytes representing the file. The response will then confirm the number of bytes received or provide an error. |
-| DownloadFileByName | [DownloadFileRequest](#kic.media.DownloadFileRequest) | [DownloadFileResponse](#kic.media.DownloadFileResponse) stream | Using the same format as above, the service allows the client to retrieve a stored file. |
-| CheckForFileByName | [CheckForFileRequest](#kic.media.CheckForFileRequest) | [CheckForFileResponse](#kic.media.CheckForFileResponse) | Check for the existence of a file by filename |
-| UpdateFilesWithMetadata | [UpdateFilesWithMetadataRequest](#kic.media.UpdateFilesWithMetadataRequest) | [UpdateFilesWithMetadataResponse](#kic.media.UpdateFilesWithMetadataResponse) |  |
+| UploadFile | [UploadFileRequest](#kic.media.UploadFileRequest) | [UploadFileResponse](#kic.media.UploadFileResponse) | Upload a file as a single base64 encoded string. |
+| DownloadFileByName | [DownloadFileRequest](#kic.media.DownloadFileRequest) | [DownloadFileResponse](#kic.media.DownloadFileResponse) stream | Send a file as a stream of messages containing a base64 encoding representing the file. |
+| CheckForFileByName | [CheckForFileRequest](#kic.media.CheckForFileRequest) | [CheckForFileResponse](#kic.media.CheckForFileResponse) | Check for the existence of a file by filename. |
+| UpdateFilesWithMetadata | [UpdateFilesWithMetadataRequest](#kic.media.UpdateFilesWithMetadataRequest) | [UpdateFilesWithMetadataResponse](#kic.media.UpdateFilesWithMetadataResponse) | Update a set of files with new metadata values. |
 | GetFilesWithMetadata | [GetFilesByMetadataRequest](#kic.media.GetFilesByMetadataRequest) | [GetFilesByMetadataResponse](#kic.media.GetFilesByMetadataResponse) | Allows for the requesting of files with specific key value pairs as metadata. The strictness can be set such that for example only perfect matches will be returned. |
 | DeleteFilesWithMetaData | [DeleteFilesWithMetaDataRequest](#kic.media.DeleteFilesWithMetaDataRequest) | [DeleteFilesWithMetaDataResponse](#kic.media.DeleteFilesWithMetaDataResponse) | Using the same strictness settings as the above, delete particular files with certain metadata. |
 
@@ -1196,17 +1239,19 @@ Response to a request for obtaining username from user id
 <a name="kic.users.UpdateUserInfoRequest"></a>
 
 ### UpdateUserInfoRequest
-Request to update a user&#39;s information with the information provided
+Request to update a user&#39;s information with the information provided. Only non-null fields will be updated,
+and the userID is not mutable.
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| userID | [int64](#int64) |  | Only required item is the User id which is used to identify what entry to update, all other non null fields will be used to update the proper column in the database |
+| userID | [int64](#int64) |  | Only required item is the UserID which is used to identify what entry to update, all other non null fields will be used to update the proper column in the database |
 | email | [string](#string) |  |  |
 | desiredUsername | [string](#string) |  |  |
 | desiredPassword | [string](#string) |  |  |
 | birthday | [kic.common.Date](#kic.common.Date) |  | User&#39;s birthday in MM/DD/YYYY format. |
 | city | [string](#string) |  | User&#39;s city location. |
+| bio | [string](#string) |  | The new bio that the user would like displayed. |
 
 
 
@@ -1238,7 +1283,7 @@ Response to a request to update a user&#39;s information with the information pr
 <a name="kic.users.Users"></a>
 
 ### Users
-Service handling fetching and storing data about users.
+Interface provided by a service handling fetching and storing data about users.
 
 | Method Name | Request Type | Response Type | Description |
 | ----------- | ------------ | ------------- | ------------|
