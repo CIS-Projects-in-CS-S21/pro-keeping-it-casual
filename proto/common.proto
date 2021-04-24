@@ -24,6 +24,10 @@ message User {
   string city = 5;
   // The bio the user would like to be displayed about them.
   string bio = 6;
+  // Trigger tags that the user would like to avoid
+  string triggers = 7;
+  // Denotes if the user is private or public
+  bool isPrivate = 8;
 }
 
 /*

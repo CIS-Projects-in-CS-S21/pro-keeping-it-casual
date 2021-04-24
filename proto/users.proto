@@ -128,6 +128,10 @@ message UpdateUserInfoRequest {
   string city = 6;
   // The new bio that the user would like displayed.
   string bio = 7;
+  // Trigger tags that the user would like to avoid
+  string triggers = 8;
+  // Denotes if the user is private or public
+  bool isPrivate = 9;
 }
 
 /*
