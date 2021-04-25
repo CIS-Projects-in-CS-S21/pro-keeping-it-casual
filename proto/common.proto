@@ -26,8 +26,8 @@ message User {
   string bio = 6;
   // Trigger tags that the user would like to avoid
   string triggers = 7;
-  // Denotes if the user is private or public
-  bool isPrivate = 8;
+  // Denotes if the user is private or public, 0 is false everything else is true
+  string isPrivate = 8;
 }
 
 /*

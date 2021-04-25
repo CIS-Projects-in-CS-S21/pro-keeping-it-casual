@@ -32,8 +32,8 @@ message AddUserRequest {
   string bio = 6;
   // Trigger tags that the user would like to avoid
   string triggers = 7;
-  // Denotes if the user is private or public
-  bool isPrivate = 8;
+  // Denotes if the user is private or public, 0 is false everything else is true
+  string isPrivate = 8;
 }
 
 /*
@@ -136,8 +136,8 @@ message UpdateUserInfoRequest {
   string bio = 7;
   // Trigger tags that the user would like to avoid
   string triggers = 8;
-  // Denotes if the user is private or public
-  bool isPrivate = 9;
+  // Denotes if the user is private or public, 0 is false everything else is true
+  string isPrivate = 9;
 }
 
 /*
