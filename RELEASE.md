@@ -54,3 +54,4 @@ To run locally on a mobile device, first make sure you have the “Expo Go” ap
 The live web application can be accessed at the following URL: [https://keeping-it-casual.com](https://keeping-it-casual.com).
 
 ## Accessing the mobile application live
+The live mobile application can be accessed by downloading the Expo Go app, then scanning the QR code on the project's Expo page: [https://expo.io/@keepingitcasual/projects/KeepingItCasual](https://expo.io/@keepingitcasual/projects/KeepingItCasual). The QR code is not limited to Android devices and also works on iOS devices.
