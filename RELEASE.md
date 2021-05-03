@@ -36,3 +36,21 @@ kubectl apply -f deployment
 
 to deploy. 
 
+## Compiling the frontend directory
+The frontend application can be compiled by navigating to the kic-frontend repo using the cd command and entering the following command:
+
+```
+expo start --no-dev --minify
+```
+
+This command will set the application to run in production mode. It will automatically open Metro Bundler in your default browser, which is a Javascript bundler responsible for compiling the frontend files. On the left menu bar of Metro Bundler, you will see a list of devices running the application, followed by several run options.
+
+## Running the application locally
+To run locally in a web browser, select “Run in web browser.” The web application will open in a new tab.
+
+To run locally on a mobile device, first make sure you have the “Expo Go” app downloaded on your mobile device (available in the Google Play Store and Apple Store). Use your camera to scan the QR code on the Metro Bundler page to open the application through Expo Go. If you experience difficulties loading the project, switch the connection to “Tunnel” and wait for the “Tunnel ready” notification to appear. Make sure the device running Metro Bundler and the mobile device you are loading the app on are connected to the same Wi-Fi network. When the tunnel is ready, scan the QR code again for the project to automatically rebuild. If it does not automatically rebuild, close the Expo Go app and re-scan the QR code.
+
+## Accessing the web application live
+The live web application can be accessed at the following URL: [https://keeping-it-casual.com](https://keeping-it-casual.com).
+
+## Accessing the mobile application live
