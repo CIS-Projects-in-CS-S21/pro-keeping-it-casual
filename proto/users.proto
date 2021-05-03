@@ -15,45 +15,25 @@ option go_package = "./proto/users;proto";
 import "proto/common.proto";
 
 /*
-These are errors used to inform the client requesting a user be added what the issue is.
-The variable names denote the issue.
-*/
-enum AddUserError {
-  // The requested email is taken.
-  DUPLICATE_EMAIL = 0;
-  // The requested username is taken.
-  DUPLICATE_USERNAME = 1;
-  // This is a catchall for passwords that the server has deemed unacceptable,
-  // checking may also be done on the client side.
-  INVALID_PASSWORD = 2;
-  // The sent date was not in the proper format.
-  BIRTHDAY_MALFORMED = 3;
-}
-
-/*
-These are errors used to inform the client requesting a user what the issue is.
-The variable names denote the issue.
-*/
-enum GetUserError {
-  // The given username does not match any records
-  INVALID_USERNAME = 0;
-  // User ID does not exist
-  INVALID_ID = 1;
-}
-
-
-
-/*
 Request for a user to be added to the user database.
 */
 message AddUserRequest {
+  // The email of the user, must be unique.
   string email = 1;
+  // The username of the user, must also be unique.
   string desiredUsername = 2;
+  // The password the user would like stored
   string desiredPassword = 3;
   // User's birthday in MM/DD/YYYY format.
   kic.common.Date birthday = 4;
   // User's city location.
   string city = 5;
+  // Bio to be displayed for the user
+  string bio = 6;
+  // Trigger tags that the user would like to avoid
+  string triggers = 7;
+  // Denotes if the user is private or public, 0 is false everything else is true
+  string isPrivate = 8;
 }
 
 /*
@@ -64,8 +44,6 @@ message AddUserResponse {
   bool success = 1;
   // Inform the client of the information assigned to the user should they be accepted.
   kic.common.User createdUser = 2;
-  // Array of errors which need to be fixed by the client.
-  repeated AddUserError errors = 3;
 }
 
 /*
@@ -84,8 +62,6 @@ message GetUserByUsernameResponse {
   bool success = 1;
   // User returned in response
   kic.common.User user = 2;
-  // Array of errors for getting user by username
-  repeated GetUserError errors = 3;
 }
 
 /*
@@ -104,8 +80,6 @@ message GetUserByIDResponse {
   bool success = 1;
   // User returned in response
   kic.common.User user = 2;
-  // Array of errors for getting user by username
-  repeated GetUserError errors = 3;
 }
 
 /*
@@ -138,17 +112,32 @@ Response to a request to delete a user with a given user id
 message DeleteUserByIDResponse {
   // Denotes if the user was successfully deleted.
   bool success = 1;
-  // Inform the client of the information assigned to the user should they be accepted.
-  kic.common.User deletedUser = 2;
 }
 
 /*
-Request to update a user's information with the information provided
+Request to update a user's information with the information provided. Only non-null fields will be updated,
+and the userID is not mutable.
  */
 message UpdateUserInfoRequest {
-  // Only required item is the User id which is used to identify what entry to update,
+  // Only required item is the UserID which is used to identify what entry to update,
   // all other non null fields will be used to update the proper column in the database
-  kic.common.User desiredInfo = 1;
+  int64 userID = 1;
+  // The email of the user, must be unique.
+  string email = 2;
+  // The username of the user, must also be unique.
+  string desiredUsername = 3;
+  // The password the user would like stored.
+  string desiredPassword = 4;
+  // User's birthday in MM/DD/YYYY format.
+  kic.common.Date birthday = 5;
+  // User's city location.
+  string city = 6;
+  // The new bio that the user would like displayed.
+  string bio = 7;
+  // Trigger tags that the user would like to avoid
+  string triggers = 8;
+  // Denotes if the user is private or public, 0 is false everything else is true
+  string isPrivate = 9;
 }
 
 /*
@@ -159,8 +148,6 @@ message UpdateUserInfoResponse {
   bool success = 1;
   // Inform the client of the information assigned to the user.
   kic.common.User updatedUser = 2;
-  // Array of errors which need to be fixed by the client.
-  repeated AddUserError errors = 3;
 }
 
 /*
@@ -174,24 +161,15 @@ message GetJWTTokenRequest {
 }
 
 /*
-The server response to a client request for a JWT, either providing the token or an error response.
+The server response to a client request for a JWT, providing the token.
 */
 message GetJWTTokenResponse {
   // Return the token as a string should the client send proper credentials
   string token = 1;
-  // Errors with the request that the client will need to fix
-  enum JWTError {
-    // Incorrect password sent
-    INVALID_PASSWORD = 0;
-    // Incorrect username sent
-    INVALID_USERNAME = 1;
-  }
-  // Tell the client the issue with the request should one exist
-  JWTError error = 2;
 }
 
 /*
-Service handling fetching and storing data about users.
+Interface provided by a service handling fetching and storing data about users.
 */
 service Users {
   // Authenticate the client session and return a JWT that can be utilized for all further contact requiring

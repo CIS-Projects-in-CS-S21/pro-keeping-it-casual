@@ -8,7 +8,9 @@ plugins:
     out: gen/go
 
   # python
-  - name: python_betterproto
+  - name: python
+    out: gen/python
+  - name: python_grpc
     out: gen/python
 
   # docs
@@ -26,7 +28,7 @@ plugins:
 
   - name: grpc-web
     out: gen/grpc-web
-    opt: import_style=typescript,mode=grpcwebtext
+    opt: import_style=commonjs,mode=grpcwebtext
 
   # nodejs/typescript
   # https://slavovojacek.medium.com/grpc-on-node-js-with-buf-and-typescript-part-1-5aad61bab03b

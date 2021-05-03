@@ -7,6 +7,9 @@ fi
 
 ../istio-1.9.0/bin/istioctl install -f kubernetes/istio/istio-custom-operator.yml
 
+# Hardcoded to the static ip of our keeping-it-casual.com hostname
+kubectl patch svc istio-ingressgateway --namespace istio-system --patch '{"spec": { "loadBalancerIP": "34.74.148.75" }}'
+
 kubectl label namespace kic istio-injection=enabled
 
 kubectl apply -f kubernetes/istio/default-gateway.yml

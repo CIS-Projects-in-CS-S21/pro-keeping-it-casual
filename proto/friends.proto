@@ -11,19 +11,27 @@ option go_package = "./proto/friends;proto";
 import "proto/common.proto";
 
 /*
-Request to get the user's friends.
+Request to get the provided user's friends.
  */
 message GetFriendsForUserRequest {
-  // Inform the client of information regarding the user.
+  // Inform the backend of information regarding the user you would like the friends of.
   kic.common.User user = 1;
 }
 
 /*
-Response to a request for getting the user's friends.
+Response to a request for getting the user's friends, returning the user IDs of all the user's friends.
  */
 message GetFriendsForUserResponse {
   // An array of all other users that the user is currently friends with.
   repeated uint64 friends = 1;
+}
+
+/*
+Response to a request for getting the the usernames of all the friends of a given user.
+ */
+message GetFriendsUsernamesForUserResponse {
+  // An array of all other users that the user is currently friends with.
+  repeated string friends = 1;
 }
 
 /*
@@ -42,21 +50,6 @@ Response to a request for getting friend recommendations for the user.
 message GetRecommendationsForUserResponse {
   // An array of users that will be recommended to the user.
   repeated kic.common.User recommendations = 1;
-}
-
-/*
-These are errors used to inform the client that is requesting a connection what the issue is.
-The variable names denote the issue.
-*/
-enum ConnectionError {
-  // Two users are not friends.
-  NO_FRIENDSHIP = 0;
-
-  // The first user does not exist.
-  USER_ONE_DNE = 1;
-
-  // The second user does not exist.
-  USER_TWO_DNE = 2;
 }
 
 /*
@@ -89,11 +82,8 @@ message GetConnectionBetweenUsersRequest {
 Response to a request for fetching the connection between two users.
  */
 message ConnectionBetweenUsersResponse {
-  // An error in fetching the connection.
-  ConnectionError error = 1;
-
   // Denotes the strength of the connection between two users.
-  float connectionStrength = 2;
+  float connectionStrength = 1;
 }
 
 /*
@@ -111,8 +101,7 @@ message DeleteConnectionBetweenUsersRequest {
 Response to a request for deleting a connection between two users.
  */
 message DeleteConnectionBetweenUsersResponse {
-  // An error in deleting the connection.
-  ConnectionError error = 1;
+
 }
 
 /*
@@ -126,28 +115,68 @@ message CreateConnectionForUsersRequest {
   uint64 secondUserID = 2;
 }
 
+/*
+Request denoting whether the connection was successfully created between two users.
+ */
 message CreateConnectionForUsersResponse {
-  // An error in creating the connection.
-  ConnectionError error = 1;
+  // Was the connection created successfully
+  bool success = 1;
 }
 
 /*
-Service handling fetching and storing data about friends.
+Request representing the case where the first user sends a friend request to the second user, so that they will
+be displayed in the second user's pending friends.
+ */
+message AddAwaitingFriendRequest {
+  // ID of the first user.
+  uint64 firstUserID = 1;
+
+  // ID of the second user.
+  uint64 secondUserID = 2;
+}
+
+/*
+Request denoting whether the friend request was properly sent to the second user.
+ */
+message AddAwaitingFriendResponse {
+  // Was the friend request created successfully
+  bool success = 1;
+}
+
+/*
+Interface provided by a service handling fetching and storing data about friends.
 */
 service Friends {
+  // Request a list of the usernames of all friends of a particular user.
+  rpc GetFriendsUsernamesForUser(GetFriendsForUserRequest) returns (GetFriendsUsernamesForUserResponse);
+
+  // Request a list of the usernames of all awaiting friends of a particular user.
+  rpc GetAwaitingFriendsUsernamesForUser(GetFriendsForUserRequest) returns (GetFriendsUsernamesForUserResponse);
+
   // Request a list of the IDs of all friends of a particular user.
   rpc GetFriendsForUser(GetFriendsForUserRequest) returns (GetFriendsForUserResponse);
+
+  // Request a list of the IDs of all pending friends of a particular user.
+  rpc GetAwaitingFriendsForUser(GetFriendsForUserRequest) returns (GetFriendsForUserResponse);
+
   // Request information about the connection between two users, checking for existence and strength.
   rpc GetConnectionBetweenUsers(GetConnectionBetweenUsersRequest) returns (ConnectionBetweenUsersResponse);
+
   // Request a list of given size of users who might be friends of the requesting user.
   rpc GetRecommendationsForUser(GetRecommendationsForUserRequest) returns (GetRecommendationsForUserResponse);
 
   // Add two users as friends and create a connection between them.
   rpc CreateConnectionForUsers(CreateConnectionForUsersRequest) returns (CreateConnectionForUsersResponse);
 
+  // Create a friend request between two users.
+  rpc AddAwaitingFriend(AddAwaitingFriendRequest) returns (AddAwaitingFriendResponse);
+
   // Update a connection strength between two users.
   rpc UpdateConnectionBetweenUsers(UpdateConnectionBetweenUsersRequest) returns (ConnectionBetweenUsersResponse);
 
   // Delete the connection between two users.
   rpc DeleteConnectionBetweenUsers(DeleteConnectionBetweenUsersRequest) returns (DeleteConnectionBetweenUsersResponse);
+
+  // Delete the pending friend request between two users.
+  rpc DeleteAwaitingFriendBetweenUsers(DeleteConnectionBetweenUsersRequest) returns (DeleteConnectionBetweenUsersResponse);
 }
