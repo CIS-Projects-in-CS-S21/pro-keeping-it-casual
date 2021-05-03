@@ -17,6 +17,8 @@ push them to your own image repository.
 
 ## Deployment
 
+NOTE: our Istio resources are configured to use the domain name that we own, namely keeping-it-casual.com. If you actually want the networking to work properly you will need to change all mentions of hostnames in istio-config.yaml files to be your owned domain name.
+
 Once you have all images built and pushed, you will be able to use kustomize to deploy each service. From within each service directory, the below code block will
 configure the resource definitions to use your docker image names. In the place of where you see $ variable substitution, you will need to put the name and tags
 that you utilized when you built and pushed each docker image. 
@@ -33,3 +35,4 @@ kubectl apply -f deployment
 ```
 
 to deploy. 
+
