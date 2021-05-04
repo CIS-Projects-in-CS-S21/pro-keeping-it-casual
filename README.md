@@ -30,3 +30,18 @@ Quentin Novinger
 Ryan McGregor  
 Priya Nigam  
 Aszliah Delicana  
+
+## Accessing the web application live
+The live web application can be accessed at the following URL: [https://keeping-it-casual.com](https://keeping-it-casual.com).
+
+## Accessing the mobile application live
+The live mobile application can be accessed by downloading the Expo Go app.
+
+For Android users: the application can be accessed by scanning the QR code on the project's Expo page: https://expo.io/@keepingitcasual/projects/KeepingItCasual. If you encounter an error loading the project, follow the steps for iOS users.
+
+For iOS users: open the Expo Go app and select the "Profile" tab. When prompted, log in using the following credentials:
+
+- Username: keepingitcasual
+- Password: keepingitcasual
+
+After logging in, you can select "KeepingItCasual" project under "Published Projects" to open the app or scan the QR code from https://expo.io/@keepingitcasual/projects/KeepingItCasual.
