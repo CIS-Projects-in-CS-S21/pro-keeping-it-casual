@@ -60,7 +60,7 @@ For Android users: the application can be accessed by scanning the QR code on th
 
 For iOS users: open the Expo Go app and select the "Profile" tab. When prompted, log in using the following credentials:
 
-Username: keepingitcasual
-Password: keepingitcasual
+- Username: keepingitcasual
+- Password: keepingitcasual
 
 After logging in, you can select "KeepingItCasual" project under "Published Projects" to open the app or scan the QR code from https://expo.io/@keepingitcasual/projects/KeepingItCasual.
